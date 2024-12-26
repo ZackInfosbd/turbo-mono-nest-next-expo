@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateAuthDto, UpdateAuthDto } from '@repo/types';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+    const { email, password } = createAuthDto;
+
+    this.logger.log(
+      `Creating user with email: ${email} & password: ${password}`,
+    );
   }
 
   findAll() {
@@ -15,11 +21,15 @@ export class AuthService {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  update(id: number, updateAuthDto: UpdateAuthDto) {
+    const { email, password } = updateAuthDto;
+
+    this.logger.log(
+      `Updating user with id: ${email} & password: ${password} #${id}`,
+    );
   }
 }

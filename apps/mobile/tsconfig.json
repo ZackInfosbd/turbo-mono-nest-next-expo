@@ -1,5 +1,27 @@
+// {
+//   "$schema": "https://json.schemastore.org/tsconfig",
+//   "extends": "@repo/eslint-config/tsconfig.shared.json",
+//   "compilerOptions": {
+//     "target": "ESNext",
+//     "module": "es2015",
+//     "moduleResolution": "bundler",
+//     "outDir": "./dist",
+//     "declaration": true,
+//     "emitDeclarationOnly": true,
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   },
+//   "include": [
+//     "src/**/*",
+//     "scripts/**/*",
+//     ".expo/types/**/*.ts",
+//     "expo-env.d.ts"
+//   ]
+// }
+
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
     "paths": {
@@ -8,20 +30,3 @@
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
-// {
-//   "extends": "expo/tsconfig.base",
-//   "compilerOptions": {
-//     "strict": true,
-//     "paths": {
-//       "@/*": [
-//         "./*"
-//       ]
-//     }
-//   },
-//   "include": [
-//     "**/*.ts",
-//     "**/*.tsx",
-//     ".expo/types/**/*.ts",
-//     "expo-env.d.ts"
-//   ]
-// }
