@@ -37,7 +37,7 @@ export class UsersController {
     @Body() createUserDto: CreateUser,
     @GetUser() user: GetUserType,
   ) {
-    checkRowLevelPermission(user, createUserDto.sub);
+    // checkRowLevelPermission(user, createUserDto.sub as string);
 
     return this.prisma.user.create({ data: createUserDto });
   }
