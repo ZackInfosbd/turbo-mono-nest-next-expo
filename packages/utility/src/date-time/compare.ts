@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import type { DateInput } from './types';
+import type { DateInput } from './dateTime-types';
 
 export function isAfter(date: DateInput, compareDate: DateInput): boolean {
   return dayjs(date).isAfter(compareDate);

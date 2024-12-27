@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import type { DateInput } from './types';
+import type { DateInput } from './dateTime-types';
 
 export function addDays(date: DateInput, amount: number): Date {
   return dayjs(date).add(amount, 'day').toDate();

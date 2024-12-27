@@ -7,7 +7,6 @@ import { join } from 'path';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { UsersModule } from './models/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule as ToBeDeletedUser } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { UsersModule as ToBeDeletedUser } from './modules/users/users.module';
       fieldResolverEnhancers: ['guards'],
     }),
     ConfigModule.forRoot(),
-    ToBeDeletedUser,
     UsersModule,
     PrismaModule,
     AuthModule,

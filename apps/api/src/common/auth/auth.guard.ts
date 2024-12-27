@@ -8,17 +8,13 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
+import { RequestWithUser } from '@repo/utility';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Role } from 'src/common/types';
 
-interface RequestWithUser {
-  headers: {
-    authorization?: string;
-  };
-  user?: {
-    roles?: Role[];
-    sub: string;
-  };
+interface JwtPayload {
+  [key: string]: unknown;
+  sub: string;
 }
 
 @Injectable()
@@ -40,7 +36,9 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const user = await this.jwtService.verify(token);
+      const user = await this.jwtService.verifyAsync<JwtPayload>(
+        token as unknown as string,
+      );
       req.user = user;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -57,7 +55,11 @@ export class AuthGuard implements CanActivate {
     req: RequestWithUser,
     context: ExecutionContext,
   ): Promise<boolean> {
-    const userRoles = await this.getUserRoles(req.user?.sub ?? '');
+    if (!req.user?.sub) {
+      return false;
+    }
+    const sub: string = req.user.sub;
+    const userRoles = await this.getUserRoles(sub);
     if (req.user) {
       req.user.roles = userRoles;
     }

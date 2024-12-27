@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -29,16 +30,11 @@ import { UserEntity } from './entity/user.entity';
 export class UsersController {
   constructor(private readonly prisma: PrismaService) {}
 
-  @AllowAuthenticated()
+  // @AllowAuthenticated()
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserEntity })
   @Post()
-  async create(
-    @Body() createUserDto: CreateUser,
-    @GetUser() user: GetUserType,
-  ) {
-    // checkRowLevelPermission(user, createUserDto.sub as string);
-
+  async create(@Body() createUserDto: CreateUser) {
     return this.prisma.user.create({ data: createUserDto });
   }
 
@@ -68,17 +64,16 @@ export class UsersController {
     return this.prisma.user.delete({ where: { sub: id } });
   }
 
-  @AllowAuthenticated()
+  // @AllowAuthenticated()
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUser,
-    @GetUser() userData: GetUserType,
-  ) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUser) {
     const user = await this.prisma.user.findUnique({ where: { sub: id } });
-    checkRowLevelPermission(userData, user?.sub);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
 
     return this.prisma.user.update({
       where: { sub: id },

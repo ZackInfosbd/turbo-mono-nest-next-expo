@@ -1,8 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { OmitType, PartialType } from '@nestjs/swagger';
 
 import { CreateUser } from './create.dto';
 
-export class UpdateUser extends PartialType(CreateUser) {
-  id: User['sub'];
-}
+export class UpdateUser extends PartialType(OmitType(CreateUser, ['sub'])) {}

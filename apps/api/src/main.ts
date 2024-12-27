@@ -1,21 +1,27 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  type OpenAPIObject,
+  SwaggerModule,
+} from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+const APOLLO_BASE_URL = 'http://studio.apollographql.com/sandbox/explorer';
+const DEFAULT_PORT = 3000;
+
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  app.useGlobalPipes(new ValidationPipe());
+  const apolloUrl = new URL(APOLLO_BASE_URL);
+  apolloUrl.searchParams.set('endpoint', 'http://localhost:3000/graphql');
+  apolloUrl.searchParams.set('document', 'query items{items{id}}');
 
-  const apolloExplorerUrl =
-    'http://studio.apollographql.com/sandbox/explorer' +
-    '?endpoint=http://localhost:3000/graphql&document=query items{items{id}}';
-
-  const config = new DocumentBuilder()
+  const swaggerConfig: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
     .setTitle('turborepo template | zackinfosbd@gmail.com')
     .setDescription(
       [
@@ -23,7 +29,7 @@ async function bootstrap() {
         '<br/>',
         'Go to <a href="/graphql" target="_blank">/graphql</a>.',
         'Or,',
-        `You might also need to use the <a target="_blank" href="${apolloExplorerUrl}">`,
+        `You might also need to use the <a target="_blank" href="${apolloUrl.toString()}">`,
         'Apollo explorer</a> for a greater experience.',
       ].join('\n'),
     )
@@ -32,13 +38,12 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(
-    app as INestApplication,
-    config,
+    app as unknown as INestApplication,
+    swaggerConfig,
   );
+  SwaggerModule.setup('api', app as unknown as INestApplication, document);
 
-  SwaggerModule.setup('api', app as INestApplication, document);
-
-  const port = process.env.PORT ?? 3000;
+  const port = Number(process.env.PORT) || DEFAULT_PORT;
   await app.listen(port);
 }
 
