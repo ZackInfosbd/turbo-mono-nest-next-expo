@@ -1,4 +1,4 @@
-import { Button } from '../ui/button';
+import { Button } from '../atoms/button';
 
 export const Test = () => {
   return <Button variant={'destructive'}>Click me!!!</Button>;

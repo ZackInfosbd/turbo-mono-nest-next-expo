@@ -1,0 +1,12 @@
+{
+  "extends": "@repo/eslint-config/tsconfig.shared.json",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "outDir": "dist",
+    "strict": true,
+    "tsBuildInfoFile": ".tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

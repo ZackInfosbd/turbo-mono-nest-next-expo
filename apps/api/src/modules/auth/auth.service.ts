@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateAuthDto, UpdateAuthDto } from '@repo/types';
+import { formatDateTime } from '@repo/utility';
 
 @Injectable()
 export class AuthService {
@@ -18,11 +19,11 @@ export class AuthService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} auth`;
+    return `This action returns a #${id} auth at ${formatDateTime(Date.now())}`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return `This action removes a #${id} auth `;
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
