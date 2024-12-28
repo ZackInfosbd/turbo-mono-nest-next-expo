@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -8,9 +9,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload, RequestWithUser } from '@repo/utility';
+import { JwtPayload, RequestWithUser, Role } from '@repo/utility';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { Role } from 'src/common/types';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly prisma: PrismaService,
   ) {}
+
   private readonly logger = new Logger(AuthGuard.name);
 
   private async authenticateUser(req: RequestWithUser): Promise<void> {
@@ -35,7 +36,7 @@ export class AuthGuard implements CanActivate {
         token as unknown as string,
       );
       req.user = user;
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
         this.logger.error(err.message);
       }
@@ -50,22 +51,39 @@ export class AuthGuard implements CanActivate {
     req: RequestWithUser,
     context: ExecutionContext,
   ): Promise<boolean> {
-    if (!req.user?.sub) {
-      return false;
-    }
+    if (!req.user?.sub) return false;
+
     const sub: string = req.user.sub;
-    const userRoles = await this.getUserRoles(sub);
-    if (req.user) {
-      req.user.roles = userRoles;
-    }
 
     const requiredRoles = this.getMetadata('roles', context);
 
-    if (!requiredRoles || requiredRoles.length === 0) {
-      return true;
+    const userRoles = await this.getUserRoles(sub);
+
+    if (req.user) req.user.roles = userRoles;
+
+    if (!requiredRoles || requiredRoles.length === 0) return true;
+
+    return userRoles.some((userRole: Role) =>
+      requiredRoles.every((requiredRole: Role) => requiredRole === userRole),
+    );
+  }
+
+  private bypassWithApiSecret(req: RequestWithUser) {
+    const apiSecret = req.headers['x-api-secret'];
+    if (!apiSecret) {
+      return false;
     }
 
-    return requiredRoles.some((role: Role) => userRoles.includes(role));
+    if (apiSecret === process.env.JWT_SECRET) {
+      req.user = {
+        sub: 'internal_admin',
+        roles: ['superAdmin', 'admin'],
+      };
+
+      return true;
+    } else {
+      throw new ForbiddenException('Nope.');
+    }
   }
 
   private getMetadata(key: string, context: ExecutionContext) {
@@ -75,24 +93,34 @@ export class AuthGuard implements CanActivate {
     ]);
   }
 
-  private async getUserRoles(sub: string): Promise<Role[]> {
+  private async getUserRoles(uid: string): Promise<Role[]> {
     const rolePromises = [
-      this.prisma.admin.findUnique({ where: { uid: sub } }),
+      this.prisma.admin.findUnique({ where: { uid } }),
+      //   this.prisma.manager.findUnique({ where: { uid } }),
       // Add promises for other role models here
     ];
 
     const roles: Role[] = [];
 
-    const [admin] = await Promise.all(rolePromises);
-
+    const [
+      admin,
+      //   manager
+    ] = await Promise.all(rolePromises);
     if (admin) roles.push('admin');
+    // manager && roles.push('manager');
 
     return roles;
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const req: RequestWithUser = ctx.getContext().req;
+    const req = ctx.getContext().req as RequestWithUser;
+
+    // Look for an internal API secret.
+    if (this.bypassWithApiSecret(req)) {
+      //  The auth check bypassed.
+      return true;
+    }
 
     await this.authenticateUser(req);
 

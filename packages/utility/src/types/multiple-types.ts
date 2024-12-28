@@ -1,11 +1,12 @@
-export type Role = 'admin' | 'user' | 'vendor';
+import { Request } from 'express';
 
-export interface RequestWithUser {
-  headers: {
-    authorization?: string;
-  };
-  user?: {
-    roles?: Role[];
-    sub: string;
-  };
+export type Role = 'superAdmin' | 'admin' | 'user' | 'vendor';
+
+export interface RequestWithUser extends Request {
+  user?: JwtPayload;
+}
+
+export interface JwtPayload {
+  [key: string]: unknown;
+  sub: string;
 }
