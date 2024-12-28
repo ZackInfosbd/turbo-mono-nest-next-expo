@@ -1,10 +1,12 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
@@ -12,10 +14,14 @@ import { JwtPayload, RequestWithUser } from '@repo/utility';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Role } from 'src/common/types';
 
+import jwtConfig from '../config/jwt.config';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly reflector: Reflector,
     private readonly prisma: PrismaService,
   ) {}
@@ -33,6 +39,9 @@ export class AuthGuard implements CanActivate {
     try {
       const user = await this.jwtService.verifyAsync<JwtPayload>(
         token as unknown as string,
+        {
+          secret: this.jwtConfiguration.secret,
+        },
       );
       req.user = user;
     } catch (err: unknown) {

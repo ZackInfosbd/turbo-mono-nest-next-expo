@@ -1,4 +1,5 @@
 import { GetUserType } from '@/common/types';
+import { Logger } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -24,12 +25,16 @@ export class ItemsResolver {
     private readonly prisma: PrismaService,
   ) {}
 
+  private readonly logger = new Logger(ItemsResolver.name);
+
   @AllowAuthenticated()
   @Mutation(() => Item)
   async createItem(
     @Args('createItemInput') args: CreateItemInput,
     @GetUser() user: GetUserType,
   ) {
+    this.logger.debug(`Creating item for user ${user.sub}`);
+
     return this.itemsService.create(args, user.sub);
   }
 

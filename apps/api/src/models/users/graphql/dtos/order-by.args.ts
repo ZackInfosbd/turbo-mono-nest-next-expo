@@ -1,3 +1,4 @@
+import { ItemOrderByRelationAggregateInput } from '@/models/items/graphql/dtos/order-by.args';
 import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
 import { RestrictProperties } from 'src/common/dtos/common.input';
@@ -9,12 +10,13 @@ export class UserOrderByWithRelationInputStrict
       UserOrderByWithRelationInputStrict,
       Omit<
         Prisma.UserOrderByWithRelationInput,
-        'Admin' | 'AuthProvider' | 'Credentials' | 'image' | 'Item'
+        'Admin' | 'AuthProvider' | 'Credentials' | 'image'
       >
     >
 {
   @Field(() => Prisma.SortOrder)
   createdAt: Prisma.SortOrder;
+  Item: ItemOrderByRelationAggregateInput;
 
   @Field(() => Prisma.SortOrder)
   name: Prisma.SortOrder;

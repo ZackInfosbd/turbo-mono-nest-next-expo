@@ -1,3 +1,4 @@
+import { ItemListRelationFilter } from '@/models/items/graphql/dtos/where.args';
 import { InputType, PartialType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
 import {
@@ -18,12 +19,13 @@ export class UserWhereInputStrict
       UserWhereInputStrict,
       Omit<
         Prisma.UserWhereInput,
-        'Admin' | 'AuthProvider' | 'Credentials' | 'image' | 'Item' | 'Manager' // include the item
+        'Admin' | 'AuthProvider' | 'Credentials' | 'image' | 'Manager' // include the item
       >
     >
 {
   AND: UserWhereInput[];
   createdAt: DateTimeFilter;
+  Item: ItemListRelationFilter;
   name: StringFilter;
   NOT: UserWhereInput[];
   OR: UserWhereInput[];
