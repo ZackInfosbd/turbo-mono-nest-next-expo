@@ -22,3 +22,14 @@ export class User implements RestrictProperties<User, UserType> {
   // Todo Add below to make optional fields optional.
   // @Field({ nullable: true })
 }
+@ObjectType()
+export class AuthOutput {
+  // @Field()
+  // accessToken: string;
+
+  // @Field()
+  // refreshToken: string;
+
+  token: string;
+  user: User;
+}

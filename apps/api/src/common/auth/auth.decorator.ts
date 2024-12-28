@@ -8,7 +8,7 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Role } from 'src/common/types';
 
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './auth-enh.guard';
 
 export const AllowAuthenticated = (...roles: Role[]) =>
   applyDecorators(SetMetadata('roles', roles), UseGuards(AuthGuard));
