@@ -17,8 +17,8 @@ export const authOptions: NextAuthOptions = {
   providers: [
     // Google Provider Configuration
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     }),
 
     // Credentials Provider Configuration
@@ -87,6 +87,7 @@ export const authOptions: NextAuthOptions = {
         { algorithm: 'HS256' },
       );
     },
+
     async decode({ token, secret }): Promise<JWT | null> {
       if (!token) {
         throw new Error('Token is undefined');
@@ -133,13 +134,13 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async session({ token, session }) {
+    session({ token, session }) {
       if (token) {
         session.user = {
           name: token.name,
           email: token.email,
           image: token.picture,
-          sub: token.sub! ?? '',
+          sub: token.sub ?? '',
         };
       }
 

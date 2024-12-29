@@ -48,6 +48,7 @@ export default [
       'jsx-a11y/role-supports-aria-props': 'warn',
     },
   },
+
   {
     ignores: ['tailwind.config.ts', 'postcss.config.mjs'],
   },

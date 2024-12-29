@@ -28,6 +28,12 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react/jsx-no-target-blank': 'off',
+      'no-console': ['off', { allow: ['log'] }],
+    },
+  },
+  {
+    rules: {
+      'no-resricted-imports': 'off',
     },
   },
   {

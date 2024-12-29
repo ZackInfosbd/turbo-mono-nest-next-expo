@@ -5,9 +5,7 @@
   "private": true,
   "exports": {
     "./login": "./src/login.tsx",
-    "./register": "./src/login.tsx",
-    "./schemas": "./src/schemas/index.ts",
-    "./add": "./src/add.ts"
+    "./schemas": "./src/schemas/index.ts"
   },
   "scripts": {
     "dev": "tsc -w",
