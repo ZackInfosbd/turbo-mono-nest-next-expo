@@ -5,5 +5,3 @@ declare module 'next-auth' {
     user?: DefaultSession['user'] & { sub: string };
   }
 }
-
-export {};

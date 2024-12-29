@@ -42,8 +42,6 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!data?.login || error) {
-          console.error(`Authentication error: ${error}`);
-
           throw new Error(
             'Authentication failed: Invalid credentials or user not found',
           );
@@ -67,7 +65,7 @@ export const authOptions: NextAuthOptions = {
 
   jwt: {
     maxAge: MAX_AGE,
-    async encode({ token, secret }): Promise<string> {
+    encode({ token, secret }): string {
       if (!token) {
         throw new Error('Token is undefined');
       }
@@ -88,7 +86,7 @@ export const authOptions: NextAuthOptions = {
       );
     },
 
-    async decode({ token, secret }): Promise<JWT | null> {
+    decode({ token, secret }): JWT | null {
       if (!token) {
         throw new Error('Token is undefined');
       }
@@ -99,8 +97,6 @@ export const authOptions: NextAuthOptions = {
 
         return decodedToken as JWT;
       } catch (error) {
-        console.error('JWT decode error', error);
-
         return null;
       }
     },
