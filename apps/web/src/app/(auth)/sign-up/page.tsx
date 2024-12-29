@@ -1,4 +1,4 @@
-import { Register } from 'src/components/auth/Register';
+import { Register } from '@repo/ui/src/components/templates/Register';
 
 export default function SignUp() {
   return (

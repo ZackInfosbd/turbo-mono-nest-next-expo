@@ -1,4 +1,4 @@
-import nextConfig from '@repo/eslint-config/eslint.react.mjs';
+import nextConfig from '@repo/eslint-config/eslint.next.mjs';
 
 export default [...nextConfig];
 

@@ -11,3 +11,7 @@ export const formSchemaLogin = formSchemaRegister.pick({
   email: true,
   password: true,
 });
+
+export const formSchemaCreateItem = z.object({
+  name: z.string().min(2),
+});

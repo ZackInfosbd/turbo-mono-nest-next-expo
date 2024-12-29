@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Container } from '@repo/ui/src/components/molecules/container';
+import { SessionProvider } from '@repo/ui/src/components/molecules/sessionProvider';
 import '@repo/ui/src/index.css';
+import { Navbar } from '@repo/ui/src/components/organisms/navbar';
+import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SessionProvider>
+          <Navbar />
+
+          <Container>{children}</Container>
+        </SessionProvider>
       </body>
     </html>
   );

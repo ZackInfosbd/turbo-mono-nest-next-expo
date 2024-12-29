@@ -1,13 +1,9 @@
-import { getAuth } from '@repo/bridge/src';
-import { Test } from '@repo/ui/src/components/molecules/test';
+import { HomePage } from '@repo/ui/src/components/templates/HomePage';
 
-export default async function Home() {
-  const user = await getAuth();
-
+export default function Home() {
   return (
     <main>
-      <h1 className="text-red-500">Hello {user?.user?.name} from Web</h1>
-      <Test />
+      <HomePage />
     </main>
   );
 }

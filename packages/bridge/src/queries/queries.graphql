@@ -99,3 +99,29 @@ query Users {
     }
   }
 }
+
+mutation CreateItem($createItemInput: CreateItemInput!) {
+  createItem(createItemInput: $createItemInput) {
+    image
+    createdAt
+    id
+    name
+    uid
+    updatedAt
+  }
+}
+
+query MyItems {
+  myItems {
+    image
+    createdAt
+    id
+    name
+    uid
+    updatedAt
+    user {
+      sub
+      name
+    }
+  }
+}

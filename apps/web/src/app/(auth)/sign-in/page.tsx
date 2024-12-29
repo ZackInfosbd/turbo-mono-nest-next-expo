@@ -1,4 +1,4 @@
-import { Login } from 'src/components/auth/Login';
+import { Login } from '@repo/ui/src/components/templates/Login';
 
 export default function SignIn() {
   return (

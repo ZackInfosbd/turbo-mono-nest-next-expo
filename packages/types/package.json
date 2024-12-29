@@ -22,7 +22,12 @@
     "@repo/eslint-config": "workspace:*",
     "@types/eslint": "9.6.1",
     "@types/node": "^20",
+    "@types/react": "^19.0.2",
     "eslint": "9.13.0",
+    "react": "^19.0.0",
     "typescript": "5.6.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
   }
 }
