@@ -3,7 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { formSchemaRegister } from './schemas';
+
+import { formSchemaRegister } from './schemas.js';
 
 export type FormTypeRegister = z.infer<typeof formSchemaRegister>;
 

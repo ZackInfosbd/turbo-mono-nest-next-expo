@@ -1,3 +1,15 @@
+'use client';
+
+import { useFormLogin } from '@repo/hooks/schemas';
+
 export const Login = () => {
-  return <main>Sign in</main>;
+  const { register, handleSubmit } = useFormLogin();
+
+  return (
+    <form
+      onSubmit={handleSubmit((data) => {
+        alert(data);
+      })}
+    ></form>
+  );
 };
