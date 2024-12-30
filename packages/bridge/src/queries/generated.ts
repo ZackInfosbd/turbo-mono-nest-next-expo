@@ -1,57 +1,70 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type Maybe<T> = T | null;
+export type Maybe<T> = null | T;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: { input: any; output: any; }
+export type Exact<T extends Record<string, unknown>> = {
+  [K in keyof T]: T[K];
 };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends Record<string, unknown>,
+  K extends keyof T,
+> = Partial<Record<K, never>>;
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
+/** All built-in and custom scalars, mapped to their actual values */
+export interface Scalars {
+  Boolean: { input: boolean; output: boolean };
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: { input: Date; output: Date };
+  Float: { input: number; output: number };
+  ID: { input: string; output: string };
+  Int: { input: number; output: number };
+  String: { input: string; output: string };
+}
 
-export type AuthOutput = {
+export interface AuthOutput {
   __typename?: 'AuthOutput';
   token: Scalars['String']['output'];
   user: User;
-};
+}
 
 export enum AuthProviderType {
   Apple = 'APPLE',
   Credentials = 'CREDENTIALS',
-  Google = 'GOOGLE'
+  Google = 'GOOGLE',
 }
 
-export type CreateItemInput = {
+export interface CreateItemInput {
   name: Scalars['String']['input'];
-};
+}
 
-export type DateTimeFilter = {
+export interface DateTimeFilter {
   equals?: InputMaybe<Scalars['String']['input']>;
   gt?: InputMaybe<Scalars['String']['input']>;
   gte?: InputMaybe<Scalars['String']['input']>;
-  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  in?: InputMaybe<Scalars['String']['input'][]>;
   lt?: InputMaybe<Scalars['String']['input']>;
   lte?: InputMaybe<Scalars['String']['input']>;
-  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-};
+  notIn?: InputMaybe<Scalars['String']['input'][]>;
+}
 
-export type IntFilter = {
+export interface IntFilter {
   equals?: InputMaybe<Scalars['Int']['input']>;
   gt?: InputMaybe<Scalars['Int']['input']>;
   gte?: InputMaybe<Scalars['Int']['input']>;
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
-};
+}
 
-export type Item = {
+export interface Item {
   __typename?: 'Item';
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
@@ -60,26 +73,26 @@ export type Item = {
   uid: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   user: User;
-};
+}
 
-export type ItemListRelationFilter = {
+export interface ItemListRelationFilter {
   every?: InputMaybe<ItemWhereInput>;
   none?: InputMaybe<ItemWhereInput>;
   some?: InputMaybe<ItemWhereInput>;
-};
+}
 
-export type ItemOrderByRelationAggregateInput = {
+export interface ItemOrderByRelationAggregateInput {
   _count?: InputMaybe<SortOrder>;
-};
+}
 
-export type ItemOrderByWithRelationInput = {
+export interface ItemOrderByWithRelationInput {
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   uid?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   user?: InputMaybe<UserOrderByWithRelationInput>;
-};
+}
 
 export enum ItemScalarFieldEnum {
   CreatedAt = 'createdAt',
@@ -87,32 +100,32 @@ export enum ItemScalarFieldEnum {
   Image = 'image',
   Name = 'name',
   Uid = 'uid',
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
 }
 
-export type ItemWhereInput = {
-  AND?: InputMaybe<Array<ItemWhereInput>>;
-  NOT?: InputMaybe<Array<ItemWhereInput>>;
-  OR?: InputMaybe<Array<ItemWhereInput>>;
+export interface ItemWhereInput {
+  AND?: InputMaybe<ItemWhereInput[]>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<IntFilter>;
   image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<StringFilter>;
+  NOT?: InputMaybe<ItemWhereInput[]>;
+  OR?: InputMaybe<ItemWhereInput[]>;
   uid?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
-};
+}
 
-export type ItemWhereUniqueInput = {
+export interface ItemWhereUniqueInput {
   id: Scalars['Int']['input'];
-};
+}
 
-export type LoginInput = {
+export interface LoginInput {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
-};
+}
 
-export type Mutation = {
+export interface Mutation {
   __typename?: 'Mutation';
   createItem: Item;
   login: AuthOutput;
@@ -122,262 +135,862 @@ export type Mutation = {
   removeUser: User;
   updateItem: Item;
   updateUser: User;
-};
+}
 
-
-export type MutationCreateItemArgs = {
+export interface MutationCreateItemArgs {
   createItemInput: CreateItemInput;
-};
+}
 
-
-export type MutationLoginArgs = {
+export interface MutationLoginArgs {
   loginInput: LoginInput;
-};
+}
 
-
-export type MutationRegisterWithCredentialsArgs = {
+export interface MutationRegisterWithCredentialsArgs {
   RegisterWithCredentialsInput: RegisterWithCredentialsInput;
-};
+}
 
-
-export type MutationRegisterWithProvidersArgs = {
+export interface MutationRegisterWithProvidersArgs {
   RegisterWithProviderInput: RegisterWithProviderInput;
-};
+}
 
-
-export type MutationRemoveItemArgs = {
+export interface MutationRemoveItemArgs {
   where: ItemWhereUniqueInput;
-};
+}
 
-
-export type MutationRemoveUserArgs = {
+export interface MutationRemoveUserArgs {
   where: UserWhereUniqueInput;
-};
+}
 
-
-export type MutationUpdateItemArgs = {
+export interface MutationUpdateItemArgs {
   updateItemInput: UpdateItemInput;
-};
+}
 
-
-export type MutationUpdateUserArgs = {
+export interface MutationUpdateUserArgs {
   updateUserInput: UpdateUserInput;
-};
+}
 
-export type Query = {
+export interface Query {
   __typename?: 'Query';
   item: Item;
-  items: Array<Item>;
-  myItems: Array<Item>;
+  items: Item[];
+  myItems: Item[];
   user: User;
-  users: Array<User>;
-};
+  users: User[];
+}
 
-
-export type QueryItemArgs = {
+export interface QueryItemArgs {
   where: ItemWhereUniqueInput;
-};
+}
 
-
-export type QueryItemsArgs = {
+export interface QueryItemsArgs {
   cursor?: InputMaybe<ItemWhereUniqueInput>;
-  distinct?: InputMaybe<Array<ItemScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ItemOrderByWithRelationInput>>;
+  distinct?: InputMaybe<ItemScalarFieldEnum[]>;
+  orderBy?: InputMaybe<ItemOrderByWithRelationInput[]>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ItemWhereInput>;
-};
+}
 
-
-export type QueryMyItemsArgs = {
+export interface QueryMyItemsArgs {
   cursor?: InputMaybe<ItemWhereUniqueInput>;
-  distinct?: InputMaybe<Array<ItemScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ItemOrderByWithRelationInput>>;
+  distinct?: InputMaybe<ItemScalarFieldEnum[]>;
+  orderBy?: InputMaybe<ItemOrderByWithRelationInput[]>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ItemWhereInput>;
-};
+}
 
-
-export type QueryUserArgs = {
+export interface QueryUserArgs {
   where: UserWhereUniqueInput;
-};
+}
 
-
-export type QueryUsersArgs = {
+export interface QueryUsersArgs {
   cursor?: InputMaybe<UserWhereUniqueInput>;
-  distinct?: InputMaybe<Array<UserScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput>>;
+  distinct?: InputMaybe<UserScalarFieldEnum[]>;
+  orderBy?: InputMaybe<UserOrderByWithRelationInput[]>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<UserWhereInput>;
-};
+}
 
 export enum QueryMode {
   Default = 'default',
-  Insensitive = 'insensitive'
+  Insensitive = 'insensitive',
 }
 
-export type RegisterWithCredentialsInput = {
+export interface RegisterWithCredentialsInput {
   email: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
-};
+}
 
-export type RegisterWithProviderInput = {
+export interface RegisterWithProviderInput {
   image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   sub: Scalars['String']['input'];
   type: AuthProviderType;
-};
+}
 
 export enum SortOrder {
   Asc = 'asc',
-  Desc = 'desc'
+  Desc = 'desc',
 }
 
-export type StringFilter = {
+export interface StringFilter {
   contains?: InputMaybe<Scalars['String']['input']>;
   endsWith?: InputMaybe<Scalars['String']['input']>;
   equals?: InputMaybe<Scalars['String']['input']>;
   gt?: InputMaybe<Scalars['String']['input']>;
   gte?: InputMaybe<Scalars['String']['input']>;
-  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  in?: InputMaybe<Scalars['String']['input'][]>;
   lt?: InputMaybe<Scalars['String']['input']>;
   lte?: InputMaybe<Scalars['String']['input']>;
   mode?: InputMaybe<QueryMode>;
   not?: InputMaybe<Scalars['String']['input']>;
-  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  notIn?: InputMaybe<Scalars['String']['input'][]>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
-};
+}
 
-export type UpdateItemInput = {
+export interface UpdateItemInput {
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-};
+}
 
-export type UpdateUserInput = {
+export interface UpdateUserInput {
   sub: Scalars['String']['input'];
-};
+}
 
-export type User = {
+export interface User {
   __typename?: 'User';
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
-  items: Array<Item>;
+  items: Item[];
   name?: Maybe<Scalars['String']['output']>;
   sub: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
-};
+}
 
-export type UserOrderByWithRelationInput = {
-  Item?: InputMaybe<ItemOrderByRelationAggregateInput>;
+export interface UserOrderByWithRelationInput {
   createdAt?: InputMaybe<SortOrder>;
+  Item?: InputMaybe<ItemOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
   sub?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
-};
+}
 
-export type UserRelationFilter = {
+export interface UserRelationFilter {
   is?: InputMaybe<UserWhereInput>;
   isNot?: InputMaybe<UserWhereInput>;
-};
+}
 
 export enum UserScalarFieldEnum {
   CreatedAt = 'createdAt',
   Image = 'image',
   Name = 'name',
   Sub = 'sub',
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
 }
 
-export type UserWhereInput = {
-  AND?: InputMaybe<Array<UserWhereInput>>;
-  Item?: InputMaybe<ItemListRelationFilter>;
-  NOT?: InputMaybe<Array<UserWhereInput>>;
-  OR?: InputMaybe<Array<UserWhereInput>>;
+export interface UserWhereInput {
+  AND?: InputMaybe<UserWhereInput[]>;
   createdAt?: InputMaybe<DateTimeFilter>;
+  Item?: InputMaybe<ItemListRelationFilter>;
   name?: InputMaybe<StringFilter>;
+  NOT?: InputMaybe<UserWhereInput[]>;
+  OR?: InputMaybe<UserWhereInput[]>;
   sub?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
-};
+}
 
-export type UserWhereUniqueInput = {
+export interface UserWhereUniqueInput {
   sub: Scalars['String']['input'];
-};
+}
 
 export type RegisterWithCredentialsMutationVariables = Exact<{
   registerWithCredentialsInput: RegisterWithCredentialsInput;
 }>;
 
-
-export type RegisterWithCredentialsMutation = { __typename?: 'Mutation', registerWithCredentials: { __typename?: 'AuthOutput', token: string, user: { __typename?: 'User', image?: string | null, name?: string | null, createdAt: any, sub: string, updatedAt: any } } };
+export interface RegisterWithCredentialsMutation {
+  __typename?: 'Mutation';
+  registerWithCredentials: {
+    __typename?: 'AuthOutput';
+    token: string;
+    user: {
+      __typename?: 'User';
+      createdAt: Date;
+      image?: null | string;
+      name?: null | string;
+      sub: string;
+      updatedAt: Date;
+    };
+  };
+}
 
 export type RegisterWithProvidersMutationVariables = Exact<{
   registerWithProviderInput: RegisterWithProviderInput;
 }>;
 
-
-export type RegisterWithProvidersMutation = { __typename?: 'Mutation', registerWithProviders: { __typename?: 'AuthOutput', token: string, user: { __typename?: 'User', sub: string, name?: string | null, image?: string | null, createdAt: any, updatedAt: any } } };
+export interface RegisterWithProvidersMutation {
+  __typename?: 'Mutation';
+  registerWithProviders: {
+    __typename?: 'AuthOutput';
+    token: string;
+    user: {
+      __typename?: 'User';
+      createdAt: Date;
+      image?: null | string;
+      name?: null | string;
+      sub: string;
+      updatedAt: Date;
+    };
+  };
+}
 
 export type LoginMutationVariables = Exact<{
   loginInput: LoginInput;
 }>;
 
-
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthOutput', token: string, user: { __typename?: 'User', image?: string | null, name?: string | null, createdAt: any, sub: string, updatedAt: any, email: string, items: Array<{ __typename?: 'Item', image?: string | null, createdAt: any, id: number, name: string, uid: string, updatedAt: any }> } } };
+export interface LoginMutation {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'AuthOutput';
+    token: string;
+    user: {
+      __typename?: 'User';
+      createdAt: Date;
+      email: string;
+      image?: null | string;
+      items: {
+        __typename?: 'Item';
+        createdAt: Date;
+        id: number;
+        image?: null | string;
+        name: string;
+        uid: string;
+        updatedAt: Date;
+      }[];
+      name?: null | string;
+      sub: string;
+      updatedAt: Date;
+    };
+  };
+}
 
 export type UserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
 
+export interface UserQuery {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    createdAt: Date;
+    email: string;
+    image?: null | string;
+    items: {
+      __typename?: 'Item';
+      createdAt: Date;
+      id: number;
+      image?: null | string;
+      name: string;
+      uid: string;
+      updatedAt: Date;
+    }[];
+    name?: null | string;
+    sub: string;
+    updatedAt: Date;
+  };
+}
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', image?: string | null, name?: string | null, createdAt: any, sub: string, updatedAt: any, email: string, items: Array<{ __typename?: 'Item', image?: string | null, createdAt: any, id: number, name: string, uid: string, updatedAt: any }> } };
+export type ItemsQueryVariables = Exact<Record<string, never>>;
 
-export type ItemsQueryVariables = Exact<{ [key: string]: never; }>;
+export interface ItemsQuery {
+  __typename?: 'Query';
+  items: {
+    __typename?: 'Item';
+    createdAt: Date;
+    id: number;
+    image?: null | string;
+    name: string;
+    uid: string;
+    updatedAt: Date;
+    user: { __typename?: 'User'; name?: null | string; sub: string };
+  }[];
+}
 
+export type UsersQueryVariables = Exact<Record<string, never>>;
 
-export type ItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', image?: string | null, createdAt: any, id: number, name: string, uid: string, updatedAt: any, user: { __typename?: 'User', sub: string, name?: string | null } }> };
-
-export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', image?: string | null, name?: string | null, createdAt: any, sub: string, updatedAt: any, items: Array<{ __typename?: 'Item', name: string, createdAt: any }> }> };
+export interface UsersQuery {
+  __typename?: 'Query';
+  users: {
+    __typename?: 'User';
+    createdAt: Date;
+    image?: null | string;
+    items: { __typename?: 'Item'; createdAt: Date; name: string }[];
+    name?: null | string;
+    sub: string;
+    updatedAt: Date;
+  }[];
+}
 
 export type CreateItemMutationVariables = Exact<{
   createItemInput: CreateItemInput;
 }>;
 
+export interface CreateItemMutation {
+  __typename?: 'Mutation';
+  createItem: {
+    __typename?: 'Item';
+    createdAt: Date;
+    id: number;
+    image?: null | string;
+    name: string;
+    uid: string;
+    updatedAt: Date;
+  };
+}
 
-export type CreateItemMutation = { __typename?: 'Mutation', createItem: { __typename?: 'Item', image?: string | null, createdAt: any, id: number, name: string, uid: string, updatedAt: any } };
+export type MyItemsQueryVariables = Exact<Record<string, never>>;
 
-export type MyItemsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyItemsQuery = { __typename?: 'Query', myItems: Array<{ __typename?: 'Item', image?: string | null, createdAt: any, id: number, name: string, uid: string, updatedAt: any, user: { __typename?: 'User', sub: string, name?: string | null } }> };
+export interface MyItemsQuery {
+  __typename?: 'Query';
+  myItems: {
+    __typename?: 'Item';
+    createdAt: Date;
+    id: number;
+    image?: null | string;
+    name: string;
+    uid: string;
+    updatedAt: Date;
+    user: { __typename?: 'User'; name?: null | string; sub: string };
+  }[];
+}
 
 export const namedOperations = {
   Query: {
     User: 'User',
     Items: 'Items',
     Users: 'Users',
-    MyItems: 'MyItems'
+    MyItems: 'MyItems',
   },
   Mutation: {
     RegisterWithCredentials: 'RegisterWithCredentials',
     RegisterWithProviders: 'RegisterWithProviders',
     Login: 'Login',
-    CreateItem: 'CreateItem'
-  }
-}
+    CreateItem: 'CreateItem',
+  },
+};
 
-export const RegisterWithCredentialsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterWithCredentials"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"registerWithCredentialsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterWithCredentialsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerWithCredentials"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"RegisterWithCredentialsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"registerWithCredentialsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterWithCredentialsMutation, RegisterWithCredentialsMutationVariables>;
-export const RegisterWithProvidersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterWithProviders"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"registerWithProviderInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterWithProviderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerWithProviders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"RegisterWithProviderInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"registerWithProviderInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterWithProvidersMutation, RegisterWithProvidersMutationVariables>;
-export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"loginInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
-export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"User"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWhereUniqueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
-export const ItemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<ItemsQuery, ItemsQueryVariables>;
-export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
-export const CreateItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createItemInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateItemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createItemInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createItemInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<CreateItemMutation, CreateItemMutationVariables>;
-export const MyItemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyItems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myItems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sub"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<MyItemsQuery, MyItemsQueryVariables>;
+export const RegisterWithCredentialsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RegisterWithCredentials' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'registerWithCredentialsInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'RegisterWithCredentialsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'registerWithCredentials' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'RegisterWithCredentialsInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'registerWithCredentialsInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RegisterWithCredentialsMutation,
+  RegisterWithCredentialsMutationVariables
+>;
+export const RegisterWithProvidersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RegisterWithProviders' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'registerWithProviderInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'RegisterWithProviderInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'registerWithProviders' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'RegisterWithProviderInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'registerWithProviderInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RegisterWithProvidersMutation,
+  RegisterWithProvidersMutationVariables
+>;
+export const LoginDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'Login' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'loginInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'LoginInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'login' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'loginInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'loginInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'createdAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'uid' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'updatedAt' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const UserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'User' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserWhereUniqueInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const ItemsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Items' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'items' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ItemsQuery, ItemsQueryVariables>;
+export const UsersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Users' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+export const CreateItemDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateItem' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'createItemInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateItemInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createItem' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'createItemInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'createItemInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateItemMutation, CreateItemMutationVariables>;
+export const MyItemsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'MyItems' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'myItems' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MyItemsQuery, MyItemsQueryVariables>;

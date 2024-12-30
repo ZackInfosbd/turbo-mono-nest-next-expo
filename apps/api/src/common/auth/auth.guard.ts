@@ -43,6 +43,7 @@ export class AuthGuard implements CanActivate {
           secret: this.jwtConfiguration.secret,
         },
       );
+
       req.user = user;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -62,6 +63,7 @@ export class AuthGuard implements CanActivate {
     if (!req.user?.sub) {
       return false;
     }
+
     const sub: string = req.user.sub;
     const userRoles = await this.getUserRoles(sub);
     if (req.user) {

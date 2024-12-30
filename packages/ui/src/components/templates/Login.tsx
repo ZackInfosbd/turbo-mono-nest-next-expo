@@ -45,7 +45,7 @@ export const Login = () => {
       <div className="flex flex-col items-center gap-2 my-6">
         <div>
           New to application?{' '}
-          <Link href="/register" className="font-semibold">
+          <Link href="/sign-up" className="font-semibold">
             Register.
           </Link>
         </div>

@@ -56,6 +56,8 @@ export class ItemsResolver {
   @AllowAuthenticated()
   @Query(() => [Item], { name: 'myItems' })
   async myItems(@Args() args: FindManyItemArgs, @GetUser() user: GetUserType) {
+    this.logger.debug(`Finding items for user:  ${JSON.stringify(user)}`);
+
     return this.itemsService.findAll({
       ...args,
       where: { ...args.where, uid: { equals: user.sub } },

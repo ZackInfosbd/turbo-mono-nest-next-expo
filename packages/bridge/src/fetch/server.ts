@@ -17,7 +17,10 @@ export async function fetchGraphQLServer<TData, V>({
   FetchResult<TData>
 > {
   const getCookies = await cookies();
+
   const token = getCookies.get('next-auth.session-token')?.value ?? '';
+
+  console.log('token', token);
 
   return fetchGraphqlStatic({ document, apiSecret, config, variables, token });
 }

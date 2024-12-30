@@ -59,7 +59,6 @@ export default [
           ],
         },
       ],
-      'no-console': 'error',
       'consistent-return': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -115,7 +114,6 @@ export default [
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      'no-console': 'off',
     },
   },
   {

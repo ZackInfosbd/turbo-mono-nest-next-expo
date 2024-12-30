@@ -7,6 +7,7 @@ export default [
       '@typescript-eslint/require-await': 'off',
 
       'no-restricted-imports': 'off',
+      'no-console': 'off',
     },
   },
 ];

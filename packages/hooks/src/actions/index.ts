@@ -1,2 +1,2 @@
-export * from './createItems';
+export * from './createItem';
 export * from './revalidate';

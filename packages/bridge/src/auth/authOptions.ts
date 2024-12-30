@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
 
       return sign(
         {
-          uid: sub,
+          sub: sub,
           image: picture,
           ...tokenProps,
           exp: expirationTimestamp,

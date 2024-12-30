@@ -24,6 +24,6 @@ export async function createItem(formData: FormData) {
       revalidateTag(namedOperations.Query.MyItems);
     }
   } else {
-    return result.error;
+    console.error('Validation failed:', result.error);
   }
 }

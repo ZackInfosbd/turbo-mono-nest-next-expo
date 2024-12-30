@@ -73,7 +73,7 @@ export const Register = () => {
       <div className="flex flex-col items-center gap-2 my-6">
         <div>
           Already have an account?{' '}
-          <Link href="/signIn" className="font-semibold">
+          <Link href="/sign-in" className="font-semibold">
             Signin?
           </Link>
         </div>

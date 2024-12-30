@@ -1,6 +1,6 @@
 import { MyItems } from '@repo/ui/src/components/templates/MyItems';
 
-function Page() {
+async function Page() {
   return (
     <main>
       <MyItems />

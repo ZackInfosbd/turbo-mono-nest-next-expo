@@ -8,6 +8,7 @@ import { formatDate } from '@repo/utility';
 export const MyItems = async () => {
   const { data, error } = await fetchGraphQLServer({
     document: MyItemsDocument,
+
     config: {
       next: {
         tags: [namedOperations.Query.MyItems],
@@ -15,10 +16,12 @@ export const MyItems = async () => {
     },
   });
 
-  console.log('data ,error', data, error);
-
   if (error) {
     return <div>Error fetching items.</div>;
+  }
+
+  if (!data || data.myItems.length === 0) {
+    return <div>No items.</div>;
   }
 
   return (
