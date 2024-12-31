@@ -11,20 +11,6 @@ import { revalidate } from '@repo/hooks/actions';
 export const FormCreateItemClient = () => {
   const { register, handleSubmit } = useFormCreateItem();
 
-  // const handler = async ({ name }: { name: string }) => {
-  //   const { data, error } = await fetchGraphQLClient({
-  //     document: CreateItemDocument,
-  //     variables: { createItemInput: { name } },
-  //   });
-
-  //   if (data) {
-  //     revalidate(namedOperations.Query.MyItems);
-  //   }
-
-  //   if (error) {
-  //     alert('Mutation failed.');
-  //   }
-  // };
   const handler = async ({ name }: { name: string }) => {
     try {
       const response = await fetchGraphQLClient({
