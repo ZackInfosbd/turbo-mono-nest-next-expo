@@ -2,7 +2,13 @@
 
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Sheet, SheetContent, SheetTrigger } from '../atoms/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from '../atoms/sheet';
 import { Menu } from 'lucide-react';
 import { BaseComponent } from '@repo/types';
 import { useDialogState } from '@repo/hooks/custom';
@@ -18,11 +24,14 @@ export const Sidebar = ({ children }: BaseComponent) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        {/* <Button variant="ghost"> */}
-        <Menu className="w-5 h-5" />
-        {/* </Button> */}
+      <SheetTrigger className="flex justify-center content-center" asChild>
+        <SheetTitle>
+          {/* <Button variant="ghost"> */}
+          <Menu className="w-5 h-5" />
+          {/* </Button> */}
+        </SheetTitle>
       </SheetTrigger>
+      <SheetDescription>Menu</SheetDescription>
       <SheetContent>{children}</SheetContent>
     </Sheet>
   );
