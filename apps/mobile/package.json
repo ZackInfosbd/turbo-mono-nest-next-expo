@@ -12,9 +12,6 @@
     "test": "jest --watchAll",
     "lint": "expo lint"
   },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
     "@expo/metro-config": "^0.19.8",
     "@expo/vector-icons": "^14.0.2",
@@ -51,6 +48,7 @@
     "@react-native/metro-config": "^0.76.5",
     "@rnx-kit/metro-config": "^2.0.1",
     "@rnx-kit/metro-resolver-symlinks": "^0.2.1",
+    "@testing-library/jest-native": "^5.4.3",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.18",
     "@types/react-test-renderer": "^18.3.0",
@@ -61,6 +59,7 @@
     "jest-expo": "~52.0.2",
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.3.1",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.3.3"
   },
   "private": true

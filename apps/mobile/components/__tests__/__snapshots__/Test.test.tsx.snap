@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View>
+  <Text
+    className=" text-red-200 font-bold text-xl p-2"
+  >
+    there is something needs to be here. Or not!
+  </Text>
+  <Text>
+    Snapshot test for children!
+  </Text>
+</View>
+`;
