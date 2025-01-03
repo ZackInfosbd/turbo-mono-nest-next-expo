@@ -38,7 +38,7 @@ export class ItemsResolver {
     return this.itemsService.create(args, user.sub);
   }
 
-  @AllowAuthenticated('admin')
+  // @AllowAuthenticated('admin')
   @Query(() => [Item], { name: 'items' })
   async findAll(@Args() args: FindManyItemArgs) {
     return this.itemsService.findAll(args);

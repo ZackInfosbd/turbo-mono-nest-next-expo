@@ -56,9 +56,51 @@ config.resolver = {
 };
 
 module.exports = withNativeWind(config, {
-  input: './global.css',
-  configPath: path.resolve(__dirname, './tailwind.config.ts'),
+  input: '../../global.css',
+  configPath: path.resolve(__dirname, './tailwind.config.js'),
+  // inlineRules: true,
 });
+
+// const { getDefaultConfig } = require('expo/metro-config');
+// const { withNativeWind } = require('nativewind/metro');
+// const { FileStore } = require('metro-cache');
+// const path = require('path');
+
+// const projectRoot = __dirname;
+// const workspaceRoot = path.resolve(projectRoot, '../..');
+
+// const config = getDefaultConfig(projectRoot, { isCSSEnabled: true });
+
+// config.watchFolders = [workspaceRoot];
+
+// config.resolver = {
+//   ...config.resolver,
+//   nodeModulesPaths: [
+//     path.resolve(projectRoot, 'node_modules'),
+//     path.resolve(workspaceRoot, 'node_modules'),
+//     path.resolve(workspaceRoot, '.pnpm'),
+//   ],
+//   disableHierarchicalLookup: true,
+//   assetExts: config.resolver.assetExts.filter((ext) => ext !== 'svg'),
+//   sourceExts: [...config.resolver.sourceExts, 'svg'],
+// };
+
+// config.transformer = {
+//   ...config.transformer,
+//   babelTransformerPath: require.resolve('react-native-svg-transformer'),
+// };
+
+// config.cacheStores = [
+//   new FileStore({
+//     root: path.join(projectRoot, 'node_modules', '.cache', 'metro'),
+//   }),
+// ];
+
+// module.exports = withNativeWind(config, {
+//   input: './src/global.css',
+//   configPath: './tailwind.config.js',
+//   inlineRules: true,
+// });
 
 // /* eslint-disable no-undef */
 // // Learn more: https://docs.expo.dev/guides/monorepos/

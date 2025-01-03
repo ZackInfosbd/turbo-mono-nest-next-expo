@@ -1,3 +1,5 @@
+import { ApolloProvider } from '@/config/apollo';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,10 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import 'global.css';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { ApolloProvider } from '@/config/apollo';
+import '../../global.css';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,7 +20,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
   useEffect(() => {
