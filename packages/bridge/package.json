@@ -9,6 +9,7 @@
     "./next-auth": "./next-auth.d.ts"
   },
   "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
     "dev": "tsc -w",
     "codegen": "graphql-codegen --config codegen.ts"
   },

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
-import Test from '../ui/test';
+
 import { Text } from 'react-native';
+import Test from '../ui/Test-test';
 
 it(`renders correctly`, () => {
   const tree = renderer

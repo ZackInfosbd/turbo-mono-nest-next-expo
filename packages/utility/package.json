@@ -18,11 +18,13 @@
   },
   "dependencies": {
     "@nestjs/mapped-types": "*",
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@types/eslint": "9.6.1",
+    "@types/express": "^5.0.0",
     "@types/node": "^20",
     "eslint": "9.13.0",
     "tsup": "^8.3.5",
