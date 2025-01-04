@@ -13,38 +13,358 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  sub          String        @id @default(cuid())
-  name         String?
-  image        String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  Credentials  Credentials?
-  AuthProvider AuthProvider?
-  Admin        Admin?
-  Item         Item[]
-}
-
 model Admin {
   uid  String @id @default(cuid())
-  user User   @relation(fields: [uid], references: [sub])
+  user User   @relation(fields: [uid], references: [uid])
 }
 
 model Credentials {
-  uid       String   @id @default(cuid())
+  id        String   @id @default(cuid())
   email     String   @unique
   password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [uid], references: [sub])
+  User      User     @relation(fields: [id], references: [uid])
 }
 
 model AuthProvider {
-  uid       String           @id @default(cuid())
+  id        String           @id @default(cuid())
   type      AuthProviderType
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
-  User      User             @relation(fields: [uid], references: [sub])
+  User      User             @relation(fields: [id], references: [uid])
+}
+
+model User {
+  uid          String        @id @default(cuid())
+  name         String?
+  image        String?
+  type         UserType      @default(PRIVATE)
+  status       UserStatus    @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  socketId     String?
+  Credentials  Credentials?
+  AuthProvider AuthProvider?
+  Admin        Admin?
+  Item         Item[]
+  Files        UserFiles[]
+
+  Profile Profile?
+
+  // // Authorization
+  CreatedRoles        Roles[]                        @relation("roleCreatedBy")
+  UpdatedRoles        Roles[]                        @relation("roleUpdatedBy")
+  DeletedRoles        Roles[]                        @relation("roleDeletedBy")
+  AssignedRoles       UserRoleAssignments[]          @relation("roleAssignedBy")
+  Roles               UserRoleAssignments[]          @relation("roleAssignedTo")
+  CreatedPermissions  Permissions[]                  @relation("permissionCreatedBy")
+  UpdatedPermissions  Permissions[]                  @relation("permissionUpdatedBy")
+  DeletedPermissions  Permissions[]                  @relation("permissionDeletedBy")
+  AssignedPermissions UserRolePermissionAssigments[]
+
+  // // Preferences & Security
+  Preferences UserPreferences?
+  Security    UserSecurity?
+
+  // // Session Management
+  Sessions     Session[]
+  SecurityLogs SecurityLog[]
+
+  @@index([type, status])
+  @@map("users")
+}
+
+model UserRoleAssignments {
+  assignedAt       DateTime @default(now())
+  roleAssignedById String
+  roleAssignedBy   User     @relation("roleAssignedBy", fields: [roleAssignedById], references: [uid])
+  assignedRoleId   Int
+  assignedRole     Roles    @relation(fields: [assignedRoleId], references: [id])
+  roleAssignedToId String
+  roleAssignedTo   User     @relation("roleAssignedTo", fields: [roleAssignedToId], references: [uid])
+
+  @@id(name: "userRoleAssignmentId", [assignedRoleId, roleAssignedToId])
+  @@map("UserRolesAssignedByUsers")
+}
+
+model Roles {
+  id                  Int                            @id @default(autoincrement())
+  created_at          DateTime                       @default(now())
+  updated_at          DateTime                       @updatedAt
+  name                String                         @unique
+  description         String?
+  state               Boolean                        @default(true)
+  createdById         String
+  createdBy           User                           @relation("roleCreatedBy", fields: [createdById], references: [uid])
+  lastUpdatedById     String?
+  lastUpdatedBy       User?                          @relation("roleUpdatedBy", fields: [lastUpdatedById], references: [uid])
+  deletedById         String?
+  deletedBy           User?                          @relation("roleDeletedBy", fields: [deletedById], references: [uid])
+  AssignedByUsers     UserRoleAssignments[]
+  UserRolePermissions UserRolePermissionAssigments[]
+
+  @@map("UserRole")
+}
+
+model UserRolePermissionAssigments {
+  assignedAt           DateTime    @default(now())
+  assignedToRoleId     Int         @map("userRoleId")
+  assignedToRole       Roles       @relation(fields: [assignedToRoleId], references: [id])
+  assignedPermissionId Int         @map("permissionId")
+  assignedPermission   Permissions @relation(fields: [assignedPermissionId], references: [id])
+  assignedById         String
+  assignedBy           User        @relation(fields: [assignedById], references: [uid])
+
+  @@id(name: "userROlePermissionAssignmentsId", [assignedPermissionId, assignedToRoleId])
+  @@map("UserRolePermissions")
+}
+
+model Permissions {
+  id                  Int                            @id @default(autoincrement())
+  name                String                         @unique
+  description         String?
+  created_at          DateTime                       @default(now())
+  updated_at          DateTime                       @updatedAt
+  createdById         String
+  createdBy           User                           @relation("permissionCreatedBy", fields: [createdById], references: [uid])
+  lastUpdatedById     String?
+  lastUpdatedBy       User?                          @relation("permissionUpdatedBy", fields: [lastUpdatedById], references: [uid])
+  deletedById         String?
+  deletedBy           User?                          @relation("permissionDeletedBy", fields: [deletedById], references: [uid])
+  UserRolePermissions UserRolePermissionAssigments[]
+}
+
+model UserPreferences {
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [uid])
+
+  // Localization
+  language String   @default("en")
+  timezone String   @default("UTC")
+  currency Currency @default(USD)
+
+  // Communication Preferences
+  emailNotifications Boolean @default(true)
+  pushNotifications  Boolean @default(true)
+  smsNotifications   Boolean @default(false)
+
+  // Privacy Settings
+  profileVisibility  PrivacyLevel @default(PUBLIC)
+  activityVisibility PrivacyLevel @default(PUBLIC)
+
+  // Security Preferences
+  requireMfaForPayments Boolean @default(false)
+  loginNotifications    Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+model UserSecurity {
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [uid])
+
+  // MFA Configuration
+  mfaEnabled  Boolean   @default(false)
+  mfaMethod   MfaMethod @default(NONE)
+  mfaSecret   String?
+  backupCodes String[] // Hashed backup codes
+
+  // Security Settings
+  maxSessions         Int     @default(5)
+  passwordlessEnabled Boolean @default(false)
+
+  // IP & Device Management
+  // trustedDevices    TrustedDevice[]
+  // allowedIPs        AllowedIP[]
+
+  // Security Questions
+  // securityQuestions SecurityQuestion[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("user_security")
+}
+
+model SecurityLog {
+  id     Int    @id @default(autoincrement())
+  userId String
+  user   User   @relation(fields: [userId], references: [uid])
+
+  eventType SecurityEventType
+  eventData Json?
+
+  // Context
+  ipAddress String?
+  userAgent String?
+  location  Json?
+
+  created_at DateTime @default(now())
+
+  @@index([userId])
+  @@index([created_at])
+  @@map("security_logs")
+}
+
+enum SecurityEventType {
+  LOGIN
+  LOGOUT
+  PASSWORD_CHANGE
+  MFA_ENABLED
+  MFA_DISABLED
+  LOGIN_FAILED
+  ACCOUNT_LOCKED
+}
+
+model Session {
+  id     Int    @id @default(autoincrement())
+  userId String
+  user   User   @relation(fields: [userId], references: [uid])
+
+  token        String  @unique
+  refreshToken String? @unique
+
+  // Device Information
+  deviceId      String?
+  deviceType    DeviceType?
+  deviceName    String?
+  clientApp     String?
+  clientVersion String?
+
+  // Location Information
+  ipAddress String?
+  userAgent String?
+  location  Json? // Geolocation data
+
+  // Session Status
+  isValid        Boolean  @default(true)
+  lastActivityAt DateTime @default(now())
+  expiresAt      DateTime
+
+  created_at    DateTime  @default(now())
+  invalidatedAt DateTime?
+
+  @@index([userId, isValid])
+  @@index([token])
+  @@map("sessions")
+}
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+  OTHER
+}
+
+enum MfaMethod {
+  NONE
+  TOTP
+  SMS
+  EMAIL
+}
+
+model Profile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [uid])
+
+  // Personal Information
+  firstName   String?
+  lastName    String?
+  displayName String?
+  dateOfBirth DateTime?
+  gender      Gender?
+
+  // Contact Information
+  phone           String? @unique
+  isPhoneVerified Boolean @default(false)
+
+  // Professional Information
+  title    String?
+  company  String?
+  position String?
+
+  // Location Information
+  addresses Address[]
+
+  // Profile Media
+  avatar ProfileFiles[]
+
+  // Timestamps
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+model UserFiles {
+  id         String        @id @default(cuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [uid])
+  url        String        @unique()
+  key        String
+  Etag       String
+  Type       UserFileTypes
+  created_at DateTime      @default(now())
+  updated_at DateTime?
+
+  @@index([userId])
+}
+
+model ProfileFiles {
+  id         String           @id @default(cuid())
+  profileId  String
+  profile    Profile          @relation(fields: [profileId], references: [id])
+  url        String           @unique()
+  key        String
+  Etag       String
+  Type       ProfileFileTypes
+  created_at DateTime         @default(now())
+  updated_at DateTime?
+
+  @@index([profileId])
+}
+
+model Address {
+  id        Int         @id @default(autoincrement())
+  profileId String
+  profile   Profile     @relation(fields: [profileId], references: [id])
+  type      AddressType @default(PERSONAL)
+  isDefault Boolean     @default(false)
+
+  // Address Components
+  street       String
+  streetNumber String?
+  apartment    String?
+  city         String
+  state        String?
+  postalCode   String
+  country      String
+  countryCode  String
+
+  // Optional Geolocation
+  latitude  Float?
+  longitude Float?
+
+  // Contact at this address
+  contactName  String?
+  contactPhone String?
+
+  // Validation and Usage
+  isVerified Boolean   @default(false)
+  lastUsedAt DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@index([profileId])
+  @@index([countryCode, city])
+  @@map("addresses")
 }
 
 model Item {
@@ -54,7 +374,21 @@ model Item {
   name      String
   image     String?
   uid       String
-  user      User     @relation(fields: [uid], references: [sub])
+  user      User     @relation(fields: [uid], references: [uid])
+}
+
+enum PrivacyLevel {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+enum Currency {
+  USD
+  EUR
+  GBP
+  CHF
+  JPY
 }
 
 enum AuthProviderType {
@@ -62,3 +396,556 @@ enum AuthProviderType {
   GOOGLE
   APPLE
 }
+
+enum AddressType {
+  PERSONAL
+  BUSINESS
+  BILLING
+  SHIPPING
+}
+
+enum ProfileFileTypes {
+  AVATAR
+  LOGO
+  BANNER
+  STORE_IMG
+}
+
+enum UserFileTypes {
+  KYC
+  IDENTITY
+  OTHER
+}
+
+enum UserType {
+  PRIVATE
+  PROFESSIONAL
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  INACTIVE
+  BANNED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+// generator client {
+//   provider = "prisma-client-js"
+//   previewFeatures = ["fullTextSearch", "relationJoins"]
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// // ==================== Core User Models ====================
+
+// model User {
+//   id                    Int       @id @default(autoincrement())
+//   email                 String    @unique
+//   password              String?
+//   userName              String    @default("userName")
+//   firstName             String?
+//   lastName              String?
+//   type                  UserType  @default(PRIVATE)
+//   status                UserStatus @default(ACTIVE)
+
+//   // Profile
+//   nationality           String?
+//   countryOfResidence    String?
+//   mobile                String?
+//   dateOfBirth          DateTime?
+//   gender               Gender?
+
+//   // Settings & Preferences
+//   prefersLanguage      String     @default("en-us")
+//   prefersCurrency      Currency   @default(USD)
+//   checkLocationOnLogin Boolean    @default(false)
+//   shown                ProfileRole @default(Public)
+//   isEmailuidscribed    Boolean    @default(false)
+
+//   // Security
+//   twoFactorMethod      MfaMethod  @default(NONE)
+//   twoFactorSecret      String?
+//   isEmailConfirmed     Boolean    @default(false)
+//   isMobileConfirmed    Boolean    @default(false)
+//   isKycConfirmed       Boolean    @default(false)
+//   pin                  Int?
+
+//   // Store & Sales
+//   store                Store?
+//   watches              Watch[]
+//   rating               Float      @default(0)
+//   nb_votes             Int        @default(0)
+
+//   // Relationships
+//   address              Address?
+//   mangopayProfile      MangopayProfile?
+//   shippingSettings     ShippingSettings?
+//   authProvider         AuthProvider?
+
+//   // Activity
+//   orders               Order[]
+//   auctions             Auction[]
+//   favorites            Favorites[]
+//   viewed               Viewed[]
+//   conversations        Conversations[]   @relation("UserConversations")
+//   sentMessages         Message[]         @relation("SentMessages")
+//   receivedMessages     Message[]         @relation("ReceivedMessages")
+
+//   // Timestamps
+//   created_at           DateTime   @default(now())
+//   updated_at           DateTime   @updatedAt
+//   deleted_at           DateTime?
+
+//   @@index([email])
+//   @@index([type])
+//   @@index([status])
+//   @@map("users")
+// }
+
+// model AuthProvider {
+//   id        Int              @id @default(autoincrement())
+//   userId    Int              @unique
+//   user      User             @relation(fields: [userId], references: [id])
+//   type      AuthProviderType
+//   provider  String
+//   providerId String
+
+//   @@map("auth_providers")
+// }
+
+// model Address {
+//   id          Int          @id @default(autoincrement())
+//   userId      Int          @unique
+//   user        User         @relation(fields: [userId], references: [id])
+//   fullAddress String
+//   houseNumber String?
+//   street      String?
+//   city        String
+//   state       String
+//   zip         String?
+//   country     String
+//   code        CountryCode
+//   latitude    Float?
+//   longitude   Float?
+
+//   created_at  DateTime     @default(now())
+//   updated_at  DateTime     @updatedAt
+//   deleted_at  DateTime?
+
+//   @@index([city])
+//   @@index([country])
+//   @@map("addresses")
+// }
+
+// // ==================== Store Models ====================
+
+// model Store {
+//   id            Int             @id @default(autoincrement())
+//   userId        Int             @unique
+//   user          User            @relation(fields: [userId], references: [id])
+//   companyName   String
+//   companyNumber String?
+//   businessType  String?
+//   status        StoreStatus     @default(PENDING)
+
+//   // Contact Info
+//   phoneNumber   String?
+//   website       String?
+//   socialLinks   Json?
+
+//   // Business Details
+//   vat           String?
+//   tax           String?
+//   about         String?         @db.Text
+//   description   String?         @db.Text
+//   location      Json?
+//   image         Json?
+
+//   // Quality Standards
+//   qualityPolicies QualityPolicy[]
+
+//   created_at    DateTime        @default(now())
+//   updated_at    DateTime        @updatedAt
+
+//   @@map("stores")
+// }
+
+// model QualityPolicy {
+//   id                     Int      @id @default(autoincrement())
+//   storeId               Int
+//   store                 Store    @relation(fields: [storeId], references: [id])
+
+//   // Watch Verification
+//   visualComparison       Boolean  @default(false)
+//   verificationDimensions Boolean  @default(false)
+//   verificationMaterial   Boolean  @default(false)
+
+//   // Movement Checks
+//   movementVerification   Boolean  @default(false)
+//   movementAccuracyCheck  Boolean  @default(false)
+
+//   // Documentation
+//   authenticityCertificate Boolean  @default(false)
+//   warrantyCard           Boolean  @default(false)
+//   originalInvoice        Boolean  @default(false)
+
+//   // Additional Checks
+//   serialNumberVerified   Boolean  @default(false)
+//   watchmakerVerified     Boolean  @default(false)
+
+//   description           String?   @db.Text
+//   documents             QualityPolicyDocument[]
+
+//   created_at            DateTime  @default(now())
+//   updated_at            DateTime  @updatedAt
+
+//   @@map("quality_policies")
+// }
+
+// // ==================== Watch Models ====================
+
+// model Watch {
+//   id                  Int            @id @default(autoincrement())
+//   reference           String?        @unique
+//   serialNumber        String?        @unique
+
+//   // Relationships
+//   sellerId           Int
+//   seller             User           @relation(fields: [sellerId], references: [id])
+//   brandId            Int
+//   brand              Brand          @relation(fields: [brandId], references: [id])
+//   modelId            Int
+//   model              Model          @relation(fields: [modelId], references: [id])
+//   categoryId         Int?
+//   category           Category?      @relation(fields: [categoryId], references: [id])
+
+//   // Basic Details
+//   type               WatchType
+//   gender             WatchGender?
+//   condition          WatchCondition
+//   scopeDelivery      ScopeDelivery
+
+//   // Technical Details
+//   caliber            Caliber?
+//   dial               Dial?
+//   watchCase          WatchCase?
+//   bracelet           Bracelet?
+//   functions          Functions?
+
+//   // Commercial Details
+//   price              Decimal        @db.Decimal(10,2)
+//   priceOnRequest     Boolean        @default(false)
+//   status             WatchStatus    @default(PENDING)
+//   published          Boolean        @default(false)
+
+//   // Metadata
+//   description        String?        @db.Text
+//   prodYear           Int?
+//   limited            Int?
+//   nb_views           Int            @default(0)
+
+//   // Media
+//   images             WatchImage[]
+//   securityImages     WatchSecurityImage[]
+
+//   // Activity
+//   orders             Order[]
+//   auctions           Auction[]
+//   favorites          Favorites[]
+//   viewed             Viewed[]
+//   conversations      Conversations[]
+
+//   // Import tracking
+//   importedFrom       ImportedWatch?
+
+//   // Timestamps
+//   created_at         DateTime       @default(now())
+//   updated_at         DateTime       @updatedAt
+//   deleted_at         DateTime?
+
+//   @@index([brandId])
+//   @@index([modelId])
+//   @@index([sellerId])
+//   @@index([price])
+//   @@index([status])
+//   @@fulltext([reference, serialNumber])
+//   @@map("watches")
+// }
+
+// model Brand {
+//   id          Int     @id @default(autoincrement())
+//   name        String  @unique
+//   description String? @db.Text
+//   models      Model[]
+//   watches     Watch[]
+
+//   @@index([name])
+//   @@map("brands")
+// }
+
+// model Model {
+//   id          Int     @id @default(autoincrement())
+//   brandId     Int
+//   brand       Brand   @relation(fields: [brandId], references: [id])
+//   name        String
+//   reference   String?
+//   yearFrom    Int?
+//   yearTo      Int?
+//   isApproved  Boolean @default(false)
+//   watches     Watch[]
+
+//   @@unique([brandId, name])
+//   @@index([name])
+//   @@map("models")
+// }
+
+// // ==================== Watch Technical Details ====================
+
+// model Caliber {
+//   id             Int        @id @default(autoincrement())
+//   watchId        Int        @unique
+//   watch          Watch      @relation(fields: [watchId], references: [id], onDelete: Cascade)
+//   movement       Movement
+//   base           String?
+//   powerReserve   String?
+//   jewels         Int?
+//   frequency      Frequency?
+//   frequencyValue Int?
+//   chronograph    Boolean    @default(false)
+
+//   @@index([movement])
+//   @@map("calibers")
+// }
+
+// model Dial {
+//   id                Int       @id @default(autoincrement())
+//   watchId           Int       @unique
+//   watch             Watch     @relation(fields: [watchId], references: [id], onDelete: Cascade)
+//   colorId           Int?
+//   color             Color?    @relation(fields: [colorId], references: [id])
+//   numerals          Numerals?
+//   guilloche         Boolean   @default(false)
+//   luminousFeatures  Boolean   @default(false)
+//   hands             Hands?
+
+//   @@map("dials")
+// }
+
+// model WatchCase {
+//   id              Int         @id @default(autoincrement())
+//   watchId         Int         @unique
+//   watch           Watch       @relation(fields: [watchId], references: [id], onDelete: Cascade)
+
+//   // Materials
+//   materialId      Int?
+//   material        Material?   @relation("CaseMaterial", fields: [materialId], references: [id])
+//   bezelMaterialId Int?
+//   bezelMaterial   Material?   @relation("BezelMaterial", fields: [bezelMaterialId], references: [id])
+
+//   // Dimensions
+//   diameter        Decimal?    @db.Decimal(5,2)
+//   thickness       Decimal?    @db.Decimal(5,2)
+//   lugWidth        Decimal?    @db.Decimal(5,2)
+
+//   // Features
+//   glass           GlassType?
+//   waterResistance WaterResistance?
+//   displayBack     Boolean     @default(false)
+//   shape           CaseShape?
+
+//   @@map("watch_cases")
+// }
+
+// // ==================== Order & Payment Models ====================
+
+// model Order {
+//   id              Int           @id @default(autoincrement())
+//   orderNumber     String        @unique
+
+//   // Relationships
+//   buyerId         Int
+//   buyer           User          @relation(fields: [buyerId], references: [id])
+//   watchId         Int
+//   watch           Watch         @relation(fields: [watchId], references: [id])
+
+//   // Status
+//   status          OrderStatus   @default(PENDING)
+
+//   // Pricing
+//   uidtotal        Decimal       @db.Decimal(10,2)
+//   shipping_price  Decimal       @db.Decimal(10,2) @default(0)
+//   tax             Decimal       @db.Decimal(10,2) @default(0)
+//   total           Decimal       @db.Decimal(10,2)
+
+//   // Related Records
+//   payment         Payment?
+//   shipping        Shipping?
+//   invoice         Invoice?
+
+//   created_at      DateTime      @default(now())
+//   updated_at      DateTime      @updatedAt
+//   completed_at    DateTime?
+
+//   @@index([buyerId])
+//   @@index([watchId])
+//   @@index([status])
+//   @@map("orders")
+// }
+
+// model Payment {
+//   id            String         @id @default(uuid())
+//   orderId       Int           @unique
+//   order         Order         @relation(fields: [orderId], references: [id])
+
+//   amount        Decimal       @db.Decimal(10,2)
+//   currency      Currency
+//   status        PaymentStatus
+//   method        PaymentMethod
+
+//   // Processing Details
+//   processor     String
+//   processorRef  String?       @unique
+//   error         String?       @db.Text
+
+//   created_at    DateTime      @default(now())
+//   updated_at    DateTime      @updatedAt
+//   processed_at  DateTime?
+
+//   @@index([status])
+//   @@map("payments")
+// }
+
+// // ==================== Import Models ====================
+
+// model ImportConfig {
+//   id              Int            @id @default(autoincrement())
+//   userId          Int
+//   user            User           @relation(fields: [userId], references: [id])
+//   provider        ImportProvider
+//   name            String
+//   isActive        Boolean        @default(true)
+//   credentials     Json?
+
+//   // Provider Specific Config
+//   shopifyConfig   ShopifyConfig?
+//   crawlerConfig   CrawlerConfig?
+//   csvConfig       CsvConfig?
+
+//   // Import History
+//   imports         Import[]
+
+//   created_at      DateTime       @default(now())
+//   updated_at      DateTime       @updatedAt
+//   lastImportAt    DateTime?
+//   nextScheduledAt DateTime?
+
+//   @@index([userId])
+//   @@index([provider])
+//   @@map("import_configs")
+// }
+
+// model Import {
+//   id              Int          @id @default(autoincrement())
+//   configId        Int
+//   config          ImportConfig @relation(fields: [configId], references: [id])
+
+//   status          ImportStatus @default(PENDING)
+//   totalItems      Int         @default(0)
+//   successCount    Int         @default(0)
+//   errorCount      Int         @default(0)
+
+//   // Error Tracking
+//   errors          Json?
+
+//   created_at      DateTime     @default(now())
+//   updated_at      DateTime     @updatedAt
+//   completed_at    DateTime?
+
+//   @@index([configId])
+//   @@index([status])
+//   @@map("imports")
+// }
+
+// // ==================== Enums ====================
+
+// enum UserType {
+//   PRIVATE
+//   PROFESSIONAL
+//   ADMIN
+// }
+
+// enum UserStatus {
+//   ACTIVE
+//   SUSPENDED
+//   INACTIVE
+// }
+
+// enum StoreStatus {
+//   PENDING
+//   ACTIVE
+//   SUSPENDED
+// }
+
+// enum WatchStatus {
+//   DRAFT
+//   PENDING
+//   ACTIVE
+//   SOLD
+//   ARCHIVED
+// }
+
+// enum OrderStatus {
+//   PENDING
+//   PAID
+//   SHIPPED
+//   DELIVERED
+//   CANCELLED
+//   REFUNDED
+// }
+
+// enum PaymentStatus {
+//   PENDING
+//   AUTHORIZED
+//   CAPTURED
+//   FAILED
+//   REFUNDED
+// }
+
+// enum PaymentMethod {
+//   CARD
+//   BANK_TRANSFER
+//   CRYPTO
+// }
+
+// enum Currency {
+//   USD
+//   EUR
+//   GBP
+//   CHF
+// }
+
+// enum ImportProvider {
+//   SHOPIFY
+//   CHRONO24
+//   CSV
+//   MANUAL
+// }
+
+// enum ImportStatus {
+//   PENDING
+//   PROCESSING
+//   COMPLETED
+//   FAILED
+// }
