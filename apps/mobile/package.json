@@ -1,11 +1,11 @@
 {
   "name": "mobile",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "scripts": {
     "clean:git": "git clean -xdf .expo .turbo node_modules",
     "clean": "rm -rf node_modules .expo .turbo",
-    "dev": "expo start -c",
+    "start": "expo start -c",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
