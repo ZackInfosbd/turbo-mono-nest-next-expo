@@ -6,14 +6,14 @@ import { User } from '../entity/user.entity';
 @InputType()
 export class CreateUserInput extends PickType(
   User,
-  ['sub', 'name', 'image'],
+  ['uid', 'name', 'image'],
   InputType,
 ) {}
 
 @InputType()
 export class RegisterWithProviderInput extends PickType(
   User,
-  ['sub', 'name', 'image'],
+  ['uid', 'name', 'image'],
   InputType,
 ) {
   @Field(() => AuthProviderType)

@@ -17,7 +17,7 @@ export const checkRowLevelPermission = (
       ? [requestedUid]
       : requestedUid.filter(Boolean);
 
-  if (!uids.includes(user.sub)) {
+  if (!uids.includes(user.uid)) {
     throw new ForbiddenException();
   }
 };

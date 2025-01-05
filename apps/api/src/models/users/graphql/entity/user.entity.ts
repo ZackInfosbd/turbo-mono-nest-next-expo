@@ -6,6 +6,14 @@ registerEnumType($Enums.AuthProviderType, {
   name: 'AuthProviderType',
 });
 
+registerEnumType($Enums.UserType, {
+  name: 'UserTypeEnum',
+});
+
+registerEnumType($Enums.UserStatus, {
+  name: 'UserStatusEnum',
+});
+
 @ObjectType()
 export class User implements RestrictProperties<User, UserType> {
   createdAt: Date;
@@ -16,12 +24,19 @@ export class User implements RestrictProperties<User, UserType> {
   @Field({ nullable: true })
   name: null | string;
 
-  sub: string;
+  socketId: null | string;
+
+  status: $Enums.UserStatus;
+
+  type: $Enums.UserType;
+
+  uid: string;
 
   updatedAt: Date;
   // Todo Add below to make optional fields optional.
   // @Field({ nullable: true })
 }
+
 @ObjectType()
 export class AuthOutput {
   // @Field()

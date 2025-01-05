@@ -6,5 +6,5 @@ import { User } from '../entity/user.entity';
 export class UpdateUserInput extends PartialType(
   PickType(User, ['name', 'image']),
 ) {
-  sub: User['sub'];
+  uid: User['uid'];
 }

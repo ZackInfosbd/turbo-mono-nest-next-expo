@@ -10,9 +10,9 @@ import { Item } from './entity/item.entity';
 export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createItemInput: CreateItemInput, sub: string) {
+  async create(createItemInput: CreateItemInput, uid: string) {
     return this.prisma.item.create({
-      data: { ...createItemInput, user: { connect: { sub } } },
+      data: { ...createItemInput, user: { connect: { uid } } },
     });
   }
 

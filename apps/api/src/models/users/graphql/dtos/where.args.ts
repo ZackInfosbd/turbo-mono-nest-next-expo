@@ -1,6 +1,6 @@
 import { ItemListRelationFilter } from '@/models/items/graphql/dtos/where.args';
 import { InputType, PartialType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
+import { $Enums, Prisma } from '@prisma/client';
 import {
   DateTimeFilter,
   RestrictProperties,
@@ -9,7 +9,7 @@ import {
 
 @InputType()
 export class UserWhereUniqueInput {
-  sub: string;
+  uid: string;
 }
 
 @InputType()
@@ -19,18 +19,44 @@ export class UserWhereInputStrict
       UserWhereInputStrict,
       Omit<
         Prisma.UserWhereInput,
-        'Admin' | 'AuthProvider' | 'Credentials' | 'image' | 'Manager' // include the item
+        | 'Admin'
+        | 'AssignedPermissions'
+        | 'AssignedRoles'
+        | 'AuthProvider'
+        | 'CreatedPermissions'
+        | 'CreatedRoles'
+        | 'Credentials'
+        | 'DeletedPermissions'
+        | 'DeletedRoles'
+        | 'Files'
+        | 'image'
+        | 'Manager'
+        | 'Preferences'
+        | 'Profile'
+        | 'Security'
+        | 'SecurityLogs'
+        | 'Sessions'
       >
     >
 {
   AND: UserWhereInput[];
   createdAt: DateTimeFilter;
+
   Item: ItemListRelationFilter;
   name: StringFilter;
   NOT: UserWhereInput[];
   OR: UserWhereInput[];
-  sub: StringFilter;
+  Roles: Prisma.UserRoleAssignmentsListRelationFilter;
+
+  // socketId: null | Prisma.StringNullableFilter<'User'> | string;
+  socketId: StringFilter;
+  status: $Enums.UserStatus | Prisma.EnumUserStatusFilter<'User'>;
+  type: $Enums.UserType | Prisma.EnumUserTypeFilter<'User'>;
+  uid: StringFilter;
   updatedAt: DateTimeFilter;
+  UpdatedPermissions: Prisma.PermissionsListRelationFilter;
+  UpdatedRoles: Prisma.RolesListRelationFilter;
+
   // Todo: Add the below field decorator only to the $Enums types.
   // @Field(() => $Enums.x)
 }

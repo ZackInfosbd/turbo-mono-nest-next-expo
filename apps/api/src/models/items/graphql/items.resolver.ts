@@ -33,9 +33,9 @@ export class ItemsResolver {
     @Args('createItemInput') args: CreateItemInput,
     @GetUser() user: GetUserType,
   ) {
-    this.logger.debug(`Creating item for user ${user.sub}`);
+    this.logger.debug(`Creating item for user ${user.uid}`);
 
-    return this.itemsService.create(args, user.sub);
+    return this.itemsService.create(args, user.uid);
   }
 
   // @AllowAuthenticated('admin')
@@ -50,7 +50,7 @@ export class ItemsResolver {
     @Args() args: FindUniqueItemArgs,
     @GetUser() user: GetUserType,
   ) {
-    return this.itemsService.getItemByOwner(args.where.id, user.sub);
+    return this.itemsService.getItemByOwner(args.where.id, user.uid);
   }
 
   @AllowAuthenticated()
@@ -60,7 +60,7 @@ export class ItemsResolver {
 
     return this.itemsService.findAll({
       ...args,
-      where: { ...args.where, uid: { equals: user.sub } },
+      where: { ...args.where, uid: { equals: user.uid } },
     });
   }
 
@@ -70,7 +70,7 @@ export class ItemsResolver {
     @Args() args: FindUniqueItemArgs,
     @GetUser() user: GetUserType,
   ) {
-    await this.itemsService.getItemByOwner(args.where.id, user.sub);
+    await this.itemsService.getItemByOwner(args.where.id, user.uid);
 
     return this.itemsService.remove(args);
   }
@@ -81,13 +81,13 @@ export class ItemsResolver {
     @Args('updateItemInput') args: UpdateItemInput,
     @GetUser() user: GetUserType,
   ) {
-    await this.itemsService.getItemByOwner(args.id, user.sub);
+    await this.itemsService.getItemByOwner(args.id, user.uid);
 
     return this.itemsService.update(args);
   }
 
   @ResolveField(() => User)
   async user(@Parent() parent: Item) {
-    return this.prisma.user.findUnique({ where: { sub: parent.uid } });
+    return this.prisma.user.findUnique({ where: { uid: parent.uid } });
   }
 }

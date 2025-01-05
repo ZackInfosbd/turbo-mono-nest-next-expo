@@ -51,17 +51,17 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.prisma.user.findUnique({ where: { sub: id } });
+    return this.prisma.user.findUnique({ where: { uid: id } });
   }
 
   @AllowAuthenticated()
   @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string, @GetUser() userData: GetUserType) {
-    const user = await this.prisma.user.findUnique({ where: { sub: id } });
-    checkRowLevelPermission(userData, user?.sub);
+    const user = await this.prisma.user.findUnique({ where: { uid: id } });
+    checkRowLevelPermission(userData, user?.uid);
 
-    return this.prisma.user.delete({ where: { sub: id } });
+    return this.prisma.user.delete({ where: { uid: id } });
   }
 
   // @AllowAuthenticated()
@@ -69,14 +69,14 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUser) {
-    const user = await this.prisma.user.findUnique({ where: { sub: id } });
+    const user = await this.prisma.user.findUnique({ where: { uid: id } });
 
     if (!user) {
       throw new BadRequestException('User not found');
     }
 
     return this.prisma.user.update({
-      where: { sub: id },
+      where: { uid: id },
       data: updateUserDto,
     });
   }

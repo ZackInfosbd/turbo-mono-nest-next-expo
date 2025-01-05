@@ -33,7 +33,7 @@ export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
   private async generateToken(user: User) {
-    const payload = { sub: user.sub };
+    const payload = { uid: user.uid };
 
     const token = await this.jwtService.signAsync(
       {
@@ -75,7 +75,7 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data: {
         name,
-        sub: uid,
+        uid: uid,
         image,
         Credentials: {
           create: {
@@ -153,10 +153,10 @@ export class UsersService {
   }
 
   async update(updateUserInput: UpdateUserInput) {
-    const { sub, ...data } = updateUserInput;
+    const { uid, ...data } = updateUserInput;
 
     return this.prisma.user.update({
-      where: { sub },
+      where: { uid },
       data: data,
     });
   }

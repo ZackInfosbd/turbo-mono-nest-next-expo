@@ -37,7 +37,7 @@ export class UsersResolver {
   @ResolveField(() => String)
   async email(@Parent() parent: User) {
     const cred = await this.prisma.credentials.findUnique({
-      where: { uid: parent.sub },
+      where: { id: parent.uid },
     });
 
     return cred?.email;
@@ -50,7 +50,7 @@ export class UsersResolver {
     @GetUser() userData: GetUserType,
   ) {
     this.logger.debug(
-      `User ${userData.roles} with id #${userData.sub} is fetching all users`,
+      `User ${userData.roles} with id #${userData.uid} is fetching all users`,
     );
 
     return this.usersService.findAll(args);
@@ -63,7 +63,7 @@ export class UsersResolver {
 
   @ResolveField(() => [Item])
   async items(@Parent() parent: User) {
-    return this.prisma.item.findMany({ where: { uid: parent.sub } });
+    return this.prisma.item.findMany({ where: { uid: parent.uid } });
   }
 
   @Mutation(() => AuthOutput)
@@ -135,9 +135,9 @@ export class UsersResolver {
     @GetUser() userData: GetUserType,
   ) {
     const user = await this.prisma.user.findUnique({
-      where: { sub: args.sub },
+      where: { uid: args.uid },
     });
-    checkRowLevelPermission(userData, user?.sub);
+    checkRowLevelPermission(userData, user?.uid);
 
     return this.usersService.update(args);
   }
