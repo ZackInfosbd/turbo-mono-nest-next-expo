@@ -23,7 +23,7 @@ export type Incremental<T> =
 export interface Scalars {
   Boolean: { input: boolean; output: boolean };
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: { input: Date; output: Date };
+  DateTime: { input: any; output: any };
   Float: { input: number; output: number };
   ID: { input: string; output: string };
   Int: { input: number; output: number };
@@ -54,6 +54,20 @@ export interface DateTimeFilter {
   lt?: InputMaybe<Scalars['String']['input']>;
   lte?: InputMaybe<Scalars['String']['input']>;
   notIn?: InputMaybe<Scalars['String']['input'][]>;
+}
+
+export interface EnumUserStatusFilter {
+  equals?: InputMaybe<UserStatusEnum>;
+  in?: InputMaybe<UserStatusEnum[]>;
+  not?: InputMaybe<UserStatusEnum>;
+  notIn?: InputMaybe<UserStatusEnum[]>;
+}
+
+export interface EnumUserTypeFilter {
+  equals?: InputMaybe<UserTypeEnum>;
+  in?: InputMaybe<UserTypeEnum[]>;
+  not?: InputMaybe<UserTypeEnum>;
+  notIn?: InputMaybe<UserTypeEnum[]>;
 }
 
 export interface IntFilter {
@@ -228,8 +242,8 @@ export interface RegisterWithCredentialsInput {
 export interface RegisterWithProviderInput {
   image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  sub: Scalars['String']['input'];
   type: AuthProviderType;
+  uid: Scalars['String']['input'];
 }
 
 export enum SortOrder {
@@ -258,7 +272,7 @@ export interface UpdateItemInput {
 }
 
 export interface UpdateUserInput {
-  sub: Scalars['String']['input'];
+  uid: Scalars['String']['input'];
 }
 
 export interface User {
@@ -268,7 +282,10 @@ export interface User {
   image?: Maybe<Scalars['String']['output']>;
   items: Item[];
   name?: Maybe<Scalars['String']['output']>;
-  sub: Scalars['String']['output'];
+  socketId?: Maybe<Scalars['String']['output']>;
+  status: UserStatusEnum;
+  type: UserTypeEnum;
+  uid: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 }
 
@@ -276,7 +293,9 @@ export interface UserOrderByWithRelationInput {
   createdAt?: InputMaybe<SortOrder>;
   Item?: InputMaybe<ItemOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
-  sub?: InputMaybe<SortOrder>;
+  status?: InputMaybe<SortOrder>;
+  type?: InputMaybe<SortOrder>;
+  uid?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
 }
 
@@ -289,8 +308,25 @@ export enum UserScalarFieldEnum {
   CreatedAt = 'createdAt',
   Image = 'image',
   Name = 'name',
-  Sub = 'sub',
+  SocketId = 'socketId',
+  Status = 'status',
+  Type = 'type',
+  Uid = 'uid',
   UpdatedAt = 'updatedAt',
+}
+
+export enum UserStatusEnum {
+  Active = 'ACTIVE',
+  Banned = 'BANNED',
+  Inactive = 'INACTIVE',
+  Pending = 'PENDING',
+  Suspended = 'SUSPENDED',
+}
+
+export enum UserTypeEnum {
+  Admin = 'ADMIN',
+  Private = 'PRIVATE',
+  Professional = 'PROFESSIONAL',
 }
 
 export interface UserWhereInput {
@@ -300,12 +336,14 @@ export interface UserWhereInput {
   name?: InputMaybe<StringFilter>;
   NOT?: InputMaybe<UserWhereInput[]>;
   OR?: InputMaybe<UserWhereInput[]>;
-  sub?: InputMaybe<StringFilter>;
+  status?: InputMaybe<EnumUserStatusFilter>;
+  type?: InputMaybe<EnumUserTypeFilter>;
+  uid?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 }
 
 export interface UserWhereUniqueInput {
-  sub: Scalars['String']['input'];
+  uid: Scalars['String']['input'];
 }
 
 export type RegisterWithCredentialsMutationVariables = Exact<{
@@ -319,11 +357,11 @@ export interface RegisterWithCredentialsMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: Date;
+      createdAt: any;
       image?: null | string;
       name?: null | string;
-      sub: string;
-      updatedAt: Date;
+      uid: string;
+      updatedAt: any;
     };
   };
 }
@@ -339,11 +377,11 @@ export interface RegisterWithProvidersMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: Date;
+      createdAt: any;
       image?: null | string;
       name?: null | string;
-      sub: string;
-      updatedAt: Date;
+      uid: string;
+      updatedAt: any;
     };
   };
 }
@@ -359,21 +397,12 @@ export interface LoginMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: Date;
+      createdAt: any;
       email: string;
       image?: null | string;
-      items: {
-        __typename?: 'Item';
-        createdAt: Date;
-        id: number;
-        image?: null | string;
-        name: string;
-        uid: string;
-        updatedAt: Date;
-      }[];
       name?: null | string;
-      sub: string;
-      updatedAt: Date;
+      uid: string;
+      updatedAt: any;
     };
   };
 }
@@ -386,52 +415,44 @@ export interface UserQuery {
   __typename?: 'Query';
   user: {
     __typename?: 'User';
-    createdAt: Date;
+    createdAt: any;
     email: string;
     image?: null | string;
     items: {
       __typename?: 'Item';
-      createdAt: Date;
+      createdAt: any;
       id: number;
       image?: null | string;
       name: string;
       uid: string;
-      updatedAt: Date;
+      updatedAt: any;
     }[];
     name?: null | string;
-    sub: string;
-    updatedAt: Date;
+    uid: string;
+    updatedAt: any;
   };
 }
 
-export type ItemsQueryVariables = Exact<Record<string, never>>;
+export type MyItemsQueryVariables = Exact<Record<string, never>>;
 
-export interface ItemsQuery {
+export interface MyItemsQuery {
   __typename?: 'Query';
-  items: {
+  myItems: {
     __typename?: 'Item';
-    createdAt: Date;
+    createdAt: any;
     id: number;
     image?: null | string;
     name: string;
     uid: string;
-    updatedAt: Date;
-    user: { __typename?: 'User'; name?: null | string; sub: string };
-  }[];
-}
-
-export type UsersQueryVariables = Exact<Record<string, never>>;
-
-export interface UsersQuery {
-  __typename?: 'Query';
-  users: {
-    __typename?: 'User';
-    createdAt: Date;
-    image?: null | string;
-    items: { __typename?: 'Item'; createdAt: Date; name: string }[];
-    name?: null | string;
-    sub: string;
-    updatedAt: Date;
+    updatedAt: any;
+    user: {
+      __typename?: 'User';
+      createdAt: any;
+      email: string;
+      name?: null | string;
+      uid: string;
+      updatedAt: any;
+    };
   }[];
 }
 
@@ -443,36 +464,18 @@ export interface CreateItemMutation {
   __typename?: 'Mutation';
   createItem: {
     __typename?: 'Item';
-    createdAt: Date;
+    createdAt: any;
     id: number;
     image?: null | string;
     name: string;
     uid: string;
-    updatedAt: Date;
+    updatedAt: any;
   };
-}
-
-export type MyItemsQueryVariables = Exact<Record<string, never>>;
-
-export interface MyItemsQuery {
-  __typename?: 'Query';
-  myItems: {
-    __typename?: 'Item';
-    createdAt: Date;
-    id: number;
-    image?: null | string;
-    name: string;
-    uid: string;
-    updatedAt: Date;
-    user: { __typename?: 'User'; name?: null | string; sub: string };
-  }[];
 }
 
 export const namedOperations = {
   Query: {
     User: 'User',
-    Items: 'Items',
-    Users: 'Users',
     MyItems: 'MyItems',
   },
   Mutation: {
@@ -532,13 +535,13 @@ export const RegisterWithCredentialsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'updatedAt' },
@@ -606,7 +609,7 @@ export const RegisterWithProvidersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       {
@@ -686,45 +689,12 @@ export const LoginDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'updatedAt' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'items' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'createdAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'uid' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'updatedAt' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -781,7 +751,7 @@ export const UserDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 {
@@ -813,19 +783,19 @@ export const UserDocument = {
     },
   ],
 } as unknown as DocumentNode<UserQuery, UserQueryVariables>;
-export const ItemsDocument = {
+export const MyItemsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'Items' },
+      name: { kind: 'Name', value: 'MyItems' },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'items' },
+            name: { kind: 'Name', value: 'myItems' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -841,50 +811,16 @@ export const ItemsDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<ItemsQuery, ItemsQueryVariables>;
-export const UsersDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Users' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'users' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
                       },
                     ],
                   },
@@ -896,7 +832,7 @@ export const UsersDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+} as unknown as DocumentNode<MyItemsQuery, MyItemsQueryVariables>;
 export const CreateItemDocument = {
   kind: 'Document',
   definitions: [
@@ -953,44 +889,3 @@ export const CreateItemDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateItemMutation, CreateItemMutationVariables>;
-export const MyItemsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'MyItems' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'myItems' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'uid' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'sub' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<MyItemsQuery, MyItemsQueryVariables>;

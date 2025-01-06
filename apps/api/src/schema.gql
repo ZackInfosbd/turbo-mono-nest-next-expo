@@ -5,11 +5,28 @@
 type User {
   image: String
   name: String
+  socketId: String
+  status: UserStatusEnum!
+  type: UserTypeEnum!
   createdAt: DateTime!
-  sub: String!
+  uid: String!
   updatedAt: DateTime!
   email: String!
   items: [Item!]!
+}
+
+enum UserStatusEnum {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  INACTIVE
+  BANNED
+}
+
+enum UserTypeEnum {
+  PRIVATE
+  PROFESSIONAL
+  ADMIN
 }
 
 """
@@ -41,21 +58,26 @@ type Query {
 }
 
 enum UserScalarFieldEnum {
-  sub
+  uid
   name
   image
+  type
+  status
   createdAt
   updatedAt
+  socketId
 }
 
 input UserWhereUniqueInput {
-  sub: String!
+  uid: String!
 }
 
 input UserOrderByWithRelationInput {
   createdAt: SortOrder
   name: SortOrder
-  sub: SortOrder
+  status: SortOrder
+  type: SortOrder
+  uid: SortOrder
   updatedAt: SortOrder
   Item: ItemOrderByRelationAggregateInput
 }
@@ -76,7 +98,9 @@ input UserWhereInput {
   name: StringFilter
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
-  sub: StringFilter
+  status: EnumUserStatusFilter
+  type: EnumUserTypeFilter
+  uid: StringFilter
   updatedAt: DateTimeFilter
 }
 
@@ -142,6 +166,20 @@ input UserRelationFilter {
   isNot: UserWhereInput
 }
 
+input EnumUserStatusFilter {
+  equals: UserStatusEnum
+  in: [UserStatusEnum!]
+  not: UserStatusEnum
+  notIn: [UserStatusEnum!]
+}
+
+input EnumUserTypeFilter {
+  equals: UserTypeEnum
+  in: [UserTypeEnum!]
+  not: UserTypeEnum
+  notIn: [UserTypeEnum!]
+}
+
 enum ItemScalarFieldEnum {
   id
   createdAt
@@ -190,7 +228,7 @@ input RegisterWithCredentialsInput {
 input RegisterWithProviderInput {
   image: String
   name: String
-  sub: String!
+  uid: String!
   type: AuthProviderType!
 }
 
@@ -201,7 +239,7 @@ enum AuthProviderType {
 }
 
 input UpdateUserInput {
-  sub: String!
+  uid: String!
 }
 
 input CreateItemInput {

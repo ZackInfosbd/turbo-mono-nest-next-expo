@@ -24,9 +24,9 @@ export class ItemsService {
     return this.prisma.item.findUnique(args);
   }
 
-  async getItemByOwner(itemId: number, sub: string): Promise<Item> {
+  async getItemByOwner(itemId: number, uid: string): Promise<Item> {
     const item = await this.prisma.item.findUnique({ where: { id: itemId } });
-    if (item?.uid !== sub) {
+    if (item?.uid !== uid) {
       throw new ForbiddenException();
     }
 

@@ -1,5 +1,10 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { $Enums, User as UserType } from '@prisma/client';
+import {
+  $Enums,
+  UserStatus,
+  User as UserType,
+  UserType as UserTypeEnum,
+} from '@prisma/client';
 import { RestrictProperties } from 'src/common/dtos/common.input';
 
 registerEnumType($Enums.AuthProviderType, {
@@ -24,11 +29,14 @@ export class User implements RestrictProperties<User, UserType> {
   @Field({ nullable: true })
   name: null | string;
 
+  @Field({ nullable: true })
   socketId: null | string;
 
-  status: $Enums.UserStatus;
+  @Field(() => $Enums.UserStatus)
+  status: UserStatus;
 
-  type: $Enums.UserType;
+  @Field(() => $Enums.UserType)
+  type: UserTypeEnum;
 
   uid: string;
 

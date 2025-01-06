@@ -60,12 +60,12 @@ export class AuthGuard implements CanActivate {
     req: RequestWithUser,
     context: ExecutionContext,
   ): Promise<boolean> {
-    if (!req.user?.sub) {
+    if (!req.user?.uid) {
       return false;
     }
 
-    const sub: string = req.user.sub;
-    const userRoles = await this.getUserRoles(sub);
+    const uid: string = req.user.uid;
+    const userRoles = await this.getUserRoles(uid);
     if (req.user) {
       req.user.roles = userRoles;
     }
@@ -86,9 +86,9 @@ export class AuthGuard implements CanActivate {
     ]);
   }
 
-  private async getUserRoles(sub: string): Promise<Role[]> {
+  private async getUserRoles(uid: string): Promise<Role[]> {
     const rolePromises = [
-      this.prisma.admin.findUnique({ where: { uid: sub } }),
+      this.prisma.admin.findUnique({ where: { uid: uid } }),
       // Add promises for other role models here
     ];
 

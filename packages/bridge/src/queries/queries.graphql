@@ -6,10 +6,10 @@ mutation RegisterWithCredentials(
   ) {
     token
     user {
-      image
+      uid
       name
+      image
       createdAt
-      sub
       updatedAt
     }
   }
@@ -21,7 +21,7 @@ mutation RegisterWithProviders(
   registerWithProviders(RegisterWithProviderInput: $registerWithProviderInput) {
     token
     user {
-      sub
+      uid
       name
       image
       createdAt
@@ -37,17 +37,9 @@ mutation Login($loginInput: LoginInput!) {
       image
       name
       createdAt
-      sub
+      uid
       updatedAt
       email
-      items {
-        image
-        createdAt
-        id
-        name
-        uid
-        updatedAt
-      }
     }
   }
 }
@@ -57,7 +49,7 @@ query User($where: UserWhereUniqueInput!) {
     image
     name
     createdAt
-    sub
+    uid
     updatedAt
     email
     items {
@@ -71,8 +63,8 @@ query User($where: UserWhereUniqueInput!) {
   }
 }
 
-query Items {
-  items {
+query MyItems {
+  myItems {
     image
     createdAt
     id
@@ -80,22 +72,11 @@ query Items {
     uid
     updatedAt
     user {
-      sub
+      uid
       name
-    }
-  }
-}
-
-query Users {
-  users {
-    image
-    name
-    createdAt
-    sub
-    updatedAt
-    items {
-      name
+      email
       createdAt
+      updatedAt
     }
   }
 }
@@ -108,20 +89,5 @@ mutation CreateItem($createItemInput: CreateItemInput!) {
     name
     uid
     updatedAt
-  }
-}
-
-query MyItems {
-  myItems {
-    image
-    createdAt
-    id
-    name
-    uid
-    updatedAt
-    user {
-      sub
-      name
-    }
   }
 }

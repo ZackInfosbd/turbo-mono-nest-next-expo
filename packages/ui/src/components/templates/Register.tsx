@@ -36,7 +36,7 @@ export const Register = () => {
           }
 
           if (data) {
-            alert(`User ${data.registerWithCredentials.user.sub} created. 🎉`);
+            alert(`User ${data.registerWithCredentials.user.uid} created. 🎉`);
             signIn('credentials', {
               email: formData.email,
               password: formData.password,

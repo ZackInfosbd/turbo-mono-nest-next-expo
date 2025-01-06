@@ -8,5 +8,5 @@ export interface RequestWithUser extends Request {
 
 export interface JwtPayload {
   [key: string]: unknown;
-  sub: string;
+  uid: string;
 }

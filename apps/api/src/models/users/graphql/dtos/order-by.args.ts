@@ -10,40 +10,50 @@ export class UserOrderByWithRelationInputStrict
       UserOrderByWithRelationInputStrict,
       Omit<
         Prisma.UserOrderByWithRelationInput,
-        'Admin' | 'AuthProvider' | 'Credentials' | 'image'
+        | 'Admin'
+        | 'AssignedPermissions'
+        | 'AssignedRoles'
+        | 'AuthProvider'
+        | 'CreatedPermissions'
+        | 'CreatedRoles'
+        | 'Credentials'
+        | 'DeletedPermissions'
+        | 'DeletedRoles'
+        | 'Files'
+        | 'image'
+        | 'Manager'
+        | 'Preferences'
+        | 'Profile'
+        | 'Roles'
+        | 'Security'
+        | 'SecurityLogs'
+        | 'Sessions'
+        | 'socketId'
+        | 'UpdatedPermissions'
+        | 'UpdatedRoles'
       >
     >
 {
-  AssignedPermissions: Prisma.UserRolePermissionAssigmentsOrderByRelationAggregateInput;
-  AssignedRoles: Prisma.UserRoleAssignmentsOrderByRelationAggregateInput;
   @Field(() => Prisma.SortOrder)
   createdAt: Prisma.SortOrder;
-  CreatedPermissions: Prisma.PermissionsOrderByRelationAggregateInput;
-  CreatedRoles: Prisma.RolesOrderByRelationAggregateInput;
-  DeletedPermissions: Prisma.PermissionsOrderByRelationAggregateInput;
-  DeletedRoles: Prisma.RolesOrderByRelationAggregateInput;
-  Files: Prisma.UserFilesOrderByRelationAggregateInput;
+
   Item: ItemOrderByRelationAggregateInput;
+
   @Field(() => Prisma.SortOrder)
   name: Prisma.SortOrder;
-  Preferences: Prisma.UserPreferencesOrderByWithRelationInput;
-  Profile: Prisma.ProfileOrderByWithRelationInput;
-  Roles: Prisma.UserRoleAssignmentsOrderByRelationAggregateInput;
-  Security: Prisma.UserSecurityOrderByWithRelationInput;
-  SecurityLogs: Prisma.SecurityLogOrderByRelationAggregateInput;
-  Sessions: Prisma.SessionOrderByRelationAggregateInput;
-  socketId: Prisma.SortOrder | Prisma.SortOrderInput;
+
+  @Field(() => Prisma.SortOrder)
   status: Prisma.SortOrder;
+
+  @Field(() => Prisma.SortOrder)
   type: Prisma.SortOrder;
+
   @Field(() => Prisma.SortOrder)
   uid: Prisma.SortOrder;
 
   @Field(() => Prisma.SortOrder)
   updatedAt: Prisma.SortOrder;
 
-  UpdatedPermissions: Prisma.PermissionsOrderByRelationAggregateInput;
-
-  UpdatedRoles: Prisma.RolesOrderByRelationAggregateInput;
   // Todo: Add below field decorator to the SortOrder properties.
   // @Field(() => Prisma.SortOrder)
 }

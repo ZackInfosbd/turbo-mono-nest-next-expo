@@ -17,9 +17,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@repo/eslint-config": "workspace:^",
-    "@repo/typescript-config": "workspace:^",
-    "@repo/utility": "workspace:^",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/utility": "workspace:*",
     "graphql": "^16.10.0",
     "jsonwebtoken": "^9.0.2"
   },
@@ -27,6 +27,7 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/named-operations-object": "^3.1.0",
     "@graphql-codegen/typed-document-node": "^5.0.12",
+    "@graphql-codegen/typescript": "^4.1.2",
     "@graphql-codegen/typescript-operations": "^4.4.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@parcel/watcher": "^2.5.0",

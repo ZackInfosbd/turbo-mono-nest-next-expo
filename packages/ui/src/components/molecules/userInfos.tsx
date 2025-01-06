@@ -26,7 +26,7 @@ export const UserInfos = async () => {
       <div className={`text-xl font-light capitalize`}>
         {session?.user?.name}
       </div>
-      <div className="text-xs text-gray-500">{session?.user?.sub}</div>
+      <div className="text-xs text-gray-500">{session?.user?.uid}</div>
     </div>
   );
 };

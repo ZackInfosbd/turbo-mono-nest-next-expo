@@ -60,13 +60,13 @@ export class AuthGuard implements CanActivate {
     req: RequestWithUser,
     context: ExecutionContext,
   ): Promise<boolean> {
-    if (!req.user?.sub) return false;
+    if (!req.user?.uid) return false;
 
-    const sub: string = req.user.sub;
+    const uid: string = req.user.uid;
 
     const requiredRoles = this.getMetadata('roles', context);
 
-    const userRoles = await this.getUserRoles(sub);
+    const userRoles = await this.getUserRoles(uid);
 
     if (req.user) req.user.roles = userRoles;
 
@@ -85,7 +85,7 @@ export class AuthGuard implements CanActivate {
 
     if (apiSecret === process.env.JWT_SECRET) {
       req.user = {
-        sub: 'internal_admin',
+        uid: 'internal_admin',
         roles: ['superAdmin', 'admin'],
       };
 

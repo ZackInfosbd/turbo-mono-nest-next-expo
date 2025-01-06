@@ -36,10 +36,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Email and password are required');
         }
 
+        console.log('Lopg from authOption', email, password);
+
         const { data, error } = await fetchGraphqlStatic({
           document: LoginDocument,
           variables: { loginInput: { email, password } },
         });
+
+        console.log('Lopg from authOption', data, error);
 
         if (!data?.login || error) {
           throw new Error(
@@ -48,8 +52,10 @@ export const authOptions: NextAuthOptions = {
         }
         const user = data.login.user;
 
+        console.log('Lopg from authOption', user);
+
         return {
-          id: user.sub,
+          id: user.uid,
           name: user.name,
           image: user.image,
           email: user.email,
@@ -69,14 +75,14 @@ export const authOptions: NextAuthOptions = {
       if (!token) {
         throw new Error('Token is undefined');
       }
-      const { sub, picture, ...tokenProps } = token;
+      const { uid, picture, ...tokenProps } = token;
 
       const nowInSeconds = Math.floor(Date.now() / 1000);
       const expirationTimestamp = nowInSeconds + MAX_AGE;
 
       return sign(
         {
-          sub: sub,
+          uid: uid,
           image: picture,
           ...tokenProps,
           exp: expirationTimestamp,
@@ -109,7 +115,7 @@ export const authOptions: NextAuthOptions = {
 
         const existingUser = await fetchGraphqlStatic({
           document: UserDocument,
-          variables: { where: { sub: id } },
+          variables: { where: { uid: id } },
         });
 
         if (!existingUser.data) {
@@ -118,7 +124,7 @@ export const authOptions: NextAuthOptions = {
             variables: {
               registerWithProviderInput: {
                 type: AuthProviderType.Google,
-                sub: id,
+                uid: id,
                 image,
                 name,
               },
@@ -136,7 +142,7 @@ export const authOptions: NextAuthOptions = {
           name: token.name,
           email: token.email,
           image: token.picture,
-          sub: token.sub ?? '',
+          uid: token.sub ?? '',
         };
       }
 

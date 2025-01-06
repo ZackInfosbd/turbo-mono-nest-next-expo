@@ -1,5 +1,5 @@
 import { ItemListRelationFilter } from '@/models/items/graphql/dtos/where.args';
-import { InputType, PartialType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { $Enums, Prisma } from '@prisma/client';
 import {
   DateTimeFilter,
@@ -10,6 +10,29 @@ import {
 @InputType()
 export class UserWhereUniqueInput {
   uid: string;
+}
+
+@InputType()
+export class EnumUserStatusFilter {
+  @Field(() => $Enums.UserStatus, { nullable: true })
+  equals?: $Enums.UserStatus;
+  @Field(() => [$Enums.UserStatus], { nullable: true })
+  in?: $Enums.UserStatus[];
+  @Field(() => $Enums.UserStatus, { nullable: true })
+  not?: $Enums.UserStatus;
+  @Field(() => [$Enums.UserStatus], { nullable: true })
+  notIn?: $Enums.UserStatus[];
+}
+@InputType()
+export class EnumUserTypeFilter {
+  @Field(() => $Enums.UserType, { nullable: true })
+  equals?: $Enums.UserType;
+  @Field(() => [$Enums.UserType], { nullable: true })
+  in?: $Enums.UserType[];
+  @Field(() => $Enums.UserType, { nullable: true })
+  not?: $Enums.UserType;
+  @Field(() => [$Enums.UserType], { nullable: true })
+  notIn?: $Enums.UserType[];
 }
 
 @InputType()
@@ -33,9 +56,13 @@ export class UserWhereInputStrict
         | 'Manager'
         | 'Preferences'
         | 'Profile'
+        | 'Roles'
         | 'Security'
         | 'SecurityLogs'
         | 'Sessions'
+        | 'socketId'
+        | 'UpdatedPermissions'
+        | 'UpdatedRoles'
       >
     >
 {
@@ -46,16 +73,11 @@ export class UserWhereInputStrict
   name: StringFilter;
   NOT: UserWhereInput[];
   OR: UserWhereInput[];
-  Roles: Prisma.UserRoleAssignmentsListRelationFilter;
 
-  // socketId: null | Prisma.StringNullableFilter<'User'> | string;
-  socketId: StringFilter;
-  status: $Enums.UserStatus | Prisma.EnumUserStatusFilter<'User'>;
-  type: $Enums.UserType | Prisma.EnumUserTypeFilter<'User'>;
+  status: EnumUserStatusFilter;
+  type: EnumUserTypeFilter;
   uid: StringFilter;
   updatedAt: DateTimeFilter;
-  UpdatedPermissions: Prisma.PermissionsListRelationFilter;
-  UpdatedRoles: Prisma.RolesListRelationFilter;
 
   // Todo: Add the below field decorator only to the $Enums types.
   // @Field(() => $Enums.x)
