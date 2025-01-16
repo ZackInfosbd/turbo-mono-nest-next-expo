@@ -23,7 +23,7 @@ export type Incremental<T> =
 export interface Scalars {
   Boolean: { input: boolean; output: boolean };
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: { input: any; output: any };
+  DateTime: { input: Date; output: Date };
   Float: { input: number; output: number };
   ID: { input: string; output: string };
   Int: { input: number; output: number };
@@ -357,11 +357,11 @@ export interface RegisterWithCredentialsMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: any;
+      createdAt: Date;
       image?: null | string;
       name?: null | string;
       uid: string;
-      updatedAt: any;
+      updatedAt: Date;
     };
   };
 }
@@ -377,11 +377,11 @@ export interface RegisterWithProvidersMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: any;
+      createdAt: Date;
       image?: null | string;
       name?: null | string;
       uid: string;
-      updatedAt: any;
+      updatedAt: Date;
     };
   };
 }
@@ -397,12 +397,12 @@ export interface LoginMutation {
     token: string;
     user: {
       __typename?: 'User';
-      createdAt: any;
+      createdAt: Date;
       email: string;
       image?: null | string;
       name?: null | string;
       uid: string;
-      updatedAt: any;
+      updatedAt: Date;
     };
   };
 }
@@ -415,21 +415,21 @@ export interface UserQuery {
   __typename?: 'Query';
   user: {
     __typename?: 'User';
-    createdAt: any;
+    createdAt: Date;
     email: string;
     image?: null | string;
     items: {
       __typename?: 'Item';
-      createdAt: any;
+      createdAt: Date;
       id: number;
       image?: null | string;
       name: string;
       uid: string;
-      updatedAt: any;
+      updatedAt: Date;
     }[];
     name?: null | string;
     uid: string;
-    updatedAt: any;
+    updatedAt: Date;
   };
 }
 
@@ -439,19 +439,19 @@ export interface MyItemsQuery {
   __typename?: 'Query';
   myItems: {
     __typename?: 'Item';
-    createdAt: any;
+    createdAt: Date;
     id: number;
     image?: null | string;
     name: string;
     uid: string;
-    updatedAt: any;
+    updatedAt: Date;
     user: {
       __typename?: 'User';
-      createdAt: any;
+      createdAt: Date;
       email: string;
       name?: null | string;
       uid: string;
-      updatedAt: any;
+      updatedAt: Date;
     };
   }[];
 }
@@ -464,12 +464,12 @@ export interface CreateItemMutation {
   __typename?: 'Mutation';
   createItem: {
     __typename?: 'Item';
-    createdAt: any;
+    createdAt: Date;
     id: number;
     image?: null | string;
     name: string;
     uid: string;
-    updatedAt: any;
+    updatedAt: Date;
   };
 }
 

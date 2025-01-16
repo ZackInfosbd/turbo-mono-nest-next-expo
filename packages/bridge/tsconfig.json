@@ -4,6 +4,6 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src", "./*.d.ts"],
+  "include": ["src", "./*.d.ts", "./codegen.ts"],
   "exclude": ["node_modules", "dist"]
 }
